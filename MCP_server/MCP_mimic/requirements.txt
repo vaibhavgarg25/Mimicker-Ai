@@ -1,0 +1,71 @@
+# requirements.txt - Complete Python Dependencies for MCP Browser Automation System
+
+# Core Framework
+flask
+flask-cors
+
+# Environment & Configuration
+python-dotenv
+
+# Database
+pymongo
+motor
+
+# Browser Automation
+playwright
+
+# Google AI/Gemini
+google-generativeai
+
+# MCP (Model Context Protocol)
+mcp>=1.13.1
+
+# Async Support
+asyncio-mqtt
+aiohttp
+
+# Data Processing
+requests
+beautifulsoup4
+
+# Date/Time Utilities
+python-dateutil
+
+# JSON/Data Validation
+jsonschema>=4.20.0
+pydantic>=2.11.0,<3.0.0
+
+# Logging & Monitoring
+structlog
+colorlog
+
+# Development & Testing
+pytest
+pytest-asyncio
+pytest-mock
+black
+flake8
+
+# Optional: For production deployment
+gunicorn
+redis
+celery
+
+# Optional: For API documentation
+flask-swagger-ui
+apispec
+marshmallow
+
+# Optional: For enhanced error handling
+sentry-sdk
+
+# Optional: WebSocket support for real-time updates
+flask-socketio
+python-socketio
+
+# Optional: Rate limiting
+flask-limiter
+
+# Optional: JWT Authentication
+pyjwt
+flask-jwt-extended
