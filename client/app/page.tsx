@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import SpotlightCard from "@/components/SpotlightCard"
 import { Navigation } from "@/components/navigation"
 import { toast } from "sonner"
 import { Sparkles, ArrowRight, Code, Globe, Brain, Shield } from "lucide-react"
@@ -125,7 +126,7 @@ export default function MimickerAI() {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance">
-            <span className="text-foreground drop-shadow-lg animate-gradient">Mimicker AI</span>
+            <span className="text-white drop-shadow-lg animate-gradient">Mimicker AI</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-12 text-balance max-w-2xl mx-auto">
@@ -141,7 +142,6 @@ export default function MimickerAI() {
             Get Started
             <ArrowRight className="ml-2 size-4" />
           </Button>
-
         </div>
 
         {/* Floating Elements */}
@@ -186,20 +186,23 @@ export default function MimickerAI() {
                 description: "Clean, readable JSON output that's easy to modify and integrate",
               },
             ].map((feature, index) => (
-              <Card
+              <SpotlightCard
                 key={index}
-                className="border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105"
+                className="hover:scale-105 transition-all duration-300"
+                spotlightColor="rgba(0, 229, 255, 0.2)"
               >
-                <CardHeader className="text-center">
-                  <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="size-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-center">{feature.description}</p>
-                </CardContent>
-              </Card>
+                <Card className="border-0 bg-transparent shadow-none">
+                  <CardHeader className="text-center">
+                    <div className="size-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <feature.icon className="size-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground text-center">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </SpotlightCard>
             ))}
           </div>
         </div>
@@ -219,7 +222,7 @@ export default function MimickerAI() {
               onClick={() => {
                 const userLoggedIn = localStorage.getItem("token")
                 if (userLoggedIn) {
-                  router.push("/dashboard") 
+                  router.push("/dashboard")
                 } else {
                   router.push("/signup")
                 }
@@ -228,7 +231,6 @@ export default function MimickerAI() {
               Sign Up to Get Started
               <ArrowRight className="ml-2 size-4" />
             </Button>
-
           </div>
         </div>
       </section>
