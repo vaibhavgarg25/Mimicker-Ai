@@ -124,17 +124,16 @@ export default function MimickerAI() {
       {/* ================= HERO ================= */}
       <section className="relative w-full h-[720px] md:h-screen overflow-hidden">
         {/* Plasma background — positioned absolute so foreground content remains clickable */}
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0">
           <Plasma
-            color="#ff6b35"
+            color="#AEB2F0"
             speed={0.6}
             direction="forward"
             scale={1.1}
             opacity={0.8}
             mouseInteractive={true}
           />
-          {/* optional overlay to keep text readable */}
-          <div className="absolute inset-0 bg-black/30" />
+          
         </div>
 
         {/* Foreground layout */}
@@ -176,55 +175,7 @@ export default function MimickerAI() {
             </button>
           </div>
 
-          {/* simple upload area below hero text */}
-          <div className="mt-8 w-full max-w-2xl">
-            <div
-              {...getRootProps()}
-              className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-left transition-all duration-200 ${
-                isDragActive ? "border-primary/60 bg-white/3" : "border-foreground/20"
-              }`}
-              aria-label="Upload video"
-            >
-              <input {...getInputProps()} />
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm text-foreground/70">
-                    {uploadedFile ? (
-                      <span>
-                        Uploaded: <strong>{uploadedFile.name}</strong>
-                      </span>
-                    ) : (
-                      "Drop a screen recording here, or click to select a file"
-                    )}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Supported: .mp4, .mov, .avi, .mkv
-                  </p>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={processVideo} disabled={!uploadedFile} size="sm">
-                    {currentStep === "upload" && "Analyze"}
-                    {currentStep === "analyzing" && "Analyzing..."}
-                    {currentStep === "generating" && "Generating..."}
-                    {currentStep === "complete" && "Complete"}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* result actions */}
-            {currentStep === "complete" && (
-              <div className="mt-4 flex gap-2 justify-center">
-                <Button onClick={copyScript} disabled={!generatedScript} size="sm">
-                  {copied ? "Copied" : "Copy Script"}
-                </Button>
-                <Button onClick={downloadScript} disabled={!generatedScript} size="sm">
-                  Download
-                </Button>
-              </div>
-            )}
-          </div>
+          
         </div>
 
         <div className="absolute bottom-6 right-6 z-20 text-[11px] text-foreground/40 tracking-wider">
