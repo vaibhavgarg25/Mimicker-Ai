@@ -19,16 +19,16 @@ export default function SignupFormDemo({
       <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-white/10 dark:from-white/5 dark:via-transparent dark:to-white/5 rounded-2xl" />
 
       <div className="relative z-10">
-        <h2 className="font-bold text-xl text-gray-800 dark:text-white">{isSignUp ? "Sign Up" : "Login"}</h2>
-        <p className="text-gray-600 text-sm max-w-sm mt-2 dark:text-gray-300">
+        <h2 className="font-thin text-xl text-foreground/95 tracking-[2px]">{isSignUp ? "SIGN UP" : "LOGIN"}</h2>
+        <p className="text-foreground/60 text-sm max-w-sm mt-2 font-light tracking-wide">
           Enter your email and password to continue
         </p>
 
         <form className="my-8" onSubmit={onSubmit}>
           {isSignUp && (
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="name" className="text-gray-700 dark:text-gray-200">
-                Full Name
+              <Label htmlFor="name" className="text-foreground/80 font-light tracking-wide text-sm">
+                FULL NAME
               </Label>
               <Input
                 id="name"
@@ -36,13 +36,13 @@ export default function SignupFormDemo({
                 placeholder="Tyler Durden"
                 type="text"
                 required
-                className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200"
+                className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-foreground placeholder:text-foreground/40 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200 font-light"
               />
             </LabelInputContainer>
           )}
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email" className="text-gray-700 dark:text-gray-200">
-              Email Address
+            <Label htmlFor="email" className="text-foreground/80 font-light tracking-wide text-sm">
+              EMAIL ADDRESS
             </Label>
             <Input
               id="email"
@@ -50,12 +50,12 @@ export default function SignupFormDemo({
               placeholder="projectmayhem@fc.com"
               type="email"
               required
-              className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200"
+              className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-foreground placeholder:text-foreground/40 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200 font-light"
             />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="password" className="text-gray-700 dark:text-gray-200">
-              Password
+            <Label htmlFor="password" className="text-foreground/80 font-light tracking-wide text-sm">
+              PASSWORD
             </Label>
             <Input
               id="password"
@@ -63,15 +63,15 @@ export default function SignupFormDemo({
               placeholder="••••••••"
               type="password"
               required
-              className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200"
+              className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border-white/30 dark:border-white/20 text-foreground placeholder:text-foreground/40 focus:bg-white/30 dark:focus:bg-white/15 transition-all duration-200 font-light"
             />
           </LabelInputContainer>
 
           <Button
-            className="bg-gray-900/80 hover:bg-gray-900/90 dark:bg-white/20 dark:hover:bg-white/30 backdrop-blur-sm relative group/btn w-full text-white dark:text-white rounded-md h-10 font-medium border border-gray-700/50 dark:border-white/20 shadow-lg hover:shadow-xl transition-all duration-200"
+            className="bg-gray-900/80 hover:bg-gray-900/90 dark:bg-white/20 dark:hover:bg-white/30 backdrop-blur-sm relative group/btn w-full text-white dark:text-white rounded-md h-10 font-light tracking-wide border border-gray-700/50 dark:border-white/20 shadow-lg hover:shadow-xl transition-all duration-200"
             type="submit"
           >
-            {isSignUp ? "Sign up" : "Sign in"} &rarr;
+            {isSignUp ? "SIGN UP" : "SIGN IN"} &rarr;
             <BottomGradient />
           </Button>
         </form>
