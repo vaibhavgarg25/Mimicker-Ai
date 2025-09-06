@@ -9,7 +9,7 @@ import { Navigation } from "@/components/navigation";
 import { toast } from "sonner";
 import { ArrowRight, Code, Globe, Brain, Shield } from "lucide-react";
 import { Plasma } from "@/components/Plasma/plasma";
-import { SpotlightCard } from "@/components/SpotlightCard";
+import  SpotlightCard  from "@/components/SpotlightCard";
 
 type ProcessingStep = "upload" | "analyzing" | "generating" | "complete";
 
@@ -198,7 +198,7 @@ export default function MimickerAI() {
                     {feature.description}
                   </p>
                 </CardContent>
-              </Card>
+              </SpotlightCard>
             ))}
           </div>
         </div>
