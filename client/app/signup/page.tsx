@@ -186,7 +186,7 @@ export default function ProfilePage() {
                     </TabsContent>
                   </Tabs>
 
-                  <div className="text-center mt-4">
+                  {/* <div className="text-center mt-4">
                     <p className="text-xs text-white/60">
                       By continuing, you agree to our{" "}
                       <Link href="/terms" className="underline text-white/90">
@@ -197,7 +197,7 @@ export default function ProfilePage() {
                         Privacy Policy
                       </Link>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Decorative outer glow to emphasize glass */}
