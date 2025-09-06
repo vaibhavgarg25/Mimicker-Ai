@@ -2,6 +2,8 @@ import { Navigation } from "@/components/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { VideoIcon, Eye, MessageSquare, FileCode, Play } from "lucide-react"
+import { CodeBlock } from "@/components/ui/code-block"
+import { Meteors } from "@/components/ui/meteors"
 
 export default function ManualPage() {
   const technicalFlow = [
@@ -159,9 +161,7 @@ export default function ManualPage() {
               <CardDescription>Example of a generated automation script for a login workflow</CardDescription>
             </CardHeader>
             <CardContent>
-              <pre className="bg-muted p-6 rounded-lg text-sm overflow-x-auto font-mono leading-relaxed">
-                {sampleScript}
-              </pre>
+              <CodeBlock code={sampleScript} language="json" filename="automation-script.json" />
             </CardContent>
           </Card>
         </div>
