@@ -5,8 +5,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
-import { ArrowLeft, Sparkles } from "lucide-react"
-import { BackgroundBeams } from "@/components/ui/background-beams"
+import { Sparkles } from "lucide-react"
+import { Plasma } from "@/components/Plasma/plasma"
 import SignupFormDemo from "@/components/signup-form-demo"
 import Link from "next/link"
 
@@ -89,34 +89,26 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
-      <BackgroundBeams />
-
-      <div className="absolute top-6 left-6 z-10">
-        <Link
-          href="/"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-white/15 transition-all duration-200"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Home
-        </Link>
+    <div className="min-h-screen bg-[#050505] text-foreground relative overflow-hidden">
+      <div className="absolute inset-0 -z-20">
+        <Plasma color="#ff6b35" speed={0.6} direction="forward" scale={1.1} opacity={0.8} mouseInteractive={true} />
       </div>
 
       <div className="min-h-screen flex">
         {/* Left side - Branding */}
         <div className="flex-1 flex items-center justify-center p-8 relative z-10">
           <div className="max-w-md text-center relative">
-            <div className="absolute inset-0 bg-white/10 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 dark:border-white/10 shadow-2xl" />
+            <div className="absolute inset-0 bg-foreground/5 backdrop-blur-xl rounded-3xl border border-foreground/10 shadow-2xl" />
             <div className="relative z-10 p-8">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Mimicker AI</h1>
+                <h1 className="text-3xl font-thin tracking-[4px] text-foreground/95">MIMICKER</h1>
               </div>
-              <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
-                Create your digital identity and connect with your audience like never before. Transform screen
-                recordings into powerful automation scripts with AI.
+              <p className="text-sm text-foreground/60 leading-relaxed">
+                Automate web tasks by showing — not coding. Transform screen recordings into powerful automation scripts
+                with AI.
               </p>
             </div>
           </div>
@@ -126,16 +118,16 @@ export default function ProfilePage() {
         <div className="flex-1 flex items-center justify-center p-8 relative z-10">
           <div className="w-full max-w-md">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/20 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20">
+              <TabsList className="grid w-full grid-cols-2 mb-8 bg-foreground/10 backdrop-blur-sm border border-foreground/20">
                 <TabsTrigger
                   value="signin"
-                  className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/20 text-gray-700 dark:text-gray-200"
+                  className="data-[state=active]:bg-foreground/20 text-foreground/80 data-[state=active]:text-foreground"
                 >
                   Sign In
                 </TabsTrigger>
                 <TabsTrigger
                   value="signup"
-                  className="data-[state=active]:bg-white/40 dark:data-[state=active]:bg-white/20 text-gray-700 dark:text-gray-200"
+                  className="data-[state=active]:bg-foreground/20 text-foreground/80 data-[state=active]:text-foreground"
                 >
                   Sign Up
                 </TabsTrigger>
@@ -151,13 +143,13 @@ export default function ProfilePage() {
             </Tabs>
 
             <div className="text-center mt-6">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-foreground/40">
                 By continuing, you agree to our{" "}
-                <Link href="/terms" className="text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href="/terms" className="text-orange-400 hover:text-orange-300 transition-colors">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">
+                <Link href="/privacy" className="text-orange-400 hover:text-orange-300 transition-colors">
                   Privacy Policy
                 </Link>
               </p>
