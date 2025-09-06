@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Sparkles, LogOut } from "lucide-react"
+import { Menu, LogOut } from "lucide-react"
 import { toast } from "sonner"
 
 export function Navigation() {
@@ -17,7 +17,7 @@ export function Navigation() {
     const checkLoginStatus = () => {
       const token = localStorage.getItem("token")
       const email = localStorage.getItem("userEmail")
-      const name= localStorage.getItem("userName")
+      const name = localStorage.getItem("userName")
       setIsLoggedIn(!!token)
       setUserEmail(email)
       setUserName(name)
@@ -37,41 +37,40 @@ export function Navigation() {
   }
 
   const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/how-to-use", label: "How to Use" },
-    { href: "/manual", label: "Manual" },
+    { href: "/", label: "HOME" },
+    { href: "/about", label: "ABOUT" },
+    { href: "/manual", label: "MANUAL" },
+    { href: "/how-to-use", label: "HOW TO USE" },
     ...(isLoggedIn
-      ? [{ href: "/dashboard", label: "Dashboard" }]
-      : [{ href: "/signup", label: "Sign Up / Login" }]),
+      ? [{ href: "/dashboard", label: "DASHBOARD" }]
+      : [{ href: "/signup", label: "LOGIN / SIGNUP" }]),
   ]
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
-            <Sparkles className="size-4 text-primary-foreground" />
-          </div>
-          Mimicker AI
+    <nav className="fixed top-0 left-0 z-50 w-full bg-transparent text-white">
+      <div className="flex h-16 items-center justify-between px-8">
+        {/* Logo (left side) */}
+        <Link
+          href="/"
+          className="font-bold text-lg tracking-widest text-white"
+        >
+          MIMICKER AI
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-10">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              className="text-sm font-mono tracking-wider hover:text-primary transition-colors"
             >
-              {item.label}
+              [ {item.label} ]
             </Link>
           ))}
 
           {isLoggedIn && (
             <div className="flex items-center gap-4 ml-6">
-              {/* Email as badge */}
               <span className="px-3 py-1 text-xs rounded-full bg-muted text-muted-foreground">
                 {userName}
               </span>
@@ -82,7 +81,7 @@ export function Navigation() {
                 className="flex items-center gap-2"
               >
                 <LogOut className="size-4" />
-                Sign Out
+                SIGN OUT
               </Button>
             </div>
           )}
@@ -91,21 +90,24 @@ export function Navigation() {
         {/* Mobile Navigation */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="text-white">
               <Menu className="size-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[280px] flex flex-col justify-between">
+          <SheetContent
+            side="right"
+            className="w-[280px] flex flex-col justify-between bg-black text-white"
+          >
             {/* Links */}
-            <div className="flex flex-col gap-4 mt-8">
+            <div className="flex flex-col gap-6 mt-8">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-muted-foreground hover:text-primary transition-colors"
+                  className="text-base font-mono tracking-wider hover:text-primary transition-colors"
                 >
-                  {item.label}
+                  [ {item.label} ]
                 </Link>
               ))}
             </div>
@@ -123,7 +125,7 @@ export function Navigation() {
                   className="flex items-center gap-2"
                 >
                   <LogOut className="size-4" />
-                  Sign Out
+                  SIGN OUT
                 </Button>
               </div>
             )}

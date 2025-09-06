@@ -3,19 +3,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root { /* Dark background #1f2937 */ /* White text */
-  --card: oklch(1 0 0); /* Card background #374151 */
-  --card-foreground: oklch(0.145 0 0); /* White text on cards */
-  --popover: oklch(1 0 0); /* Popover background */
-  --popover-foreground: oklch(0.145 0 0); /* White text on popovers */
-  --primary: oklch(0.205 0 0); /* Lightened primary for better contrast */
+:root {
+  --background: #0f172a; /* Example dark background */
+  --foreground: #f8fafc; /* Example light text */
+  --card: oklch(0.205 0 0); /* Card background #374151 */
+  --card-foreground: oklch(0.985 0 0); /* White text on cards */
+  --popover: oklch(0.205 0 0); /* Popover background */
+  --popover-foreground: oklch(0.985 0 0); /* White text on popovers */
+  --primary: #6366f1;
   --primary-foreground: oklch(0.985 0 0); /* White text on primary */
-  --secondary: oklch(0.97 0 0); /* Secondary gray */
-  --secondary-foreground: oklch(0.205 0 0); /* White text on secondary */
-  --muted: oklch(0.97 0 0); /* Muted background */
-  --muted-foreground: oklch(0.556 0 0); /* Lightened muted text for better contrast */
-  --accent: oklch(0.97 0 0); /* Lightened accent to match primary */
-  --accent-foreground: oklch(0.205 0 0); /* White text on accent */
+  --secondary: oklch(0.269 0 0); /* Secondary gray */
+  --secondary-foreground: oklch(0.985 0 0); /* White text on secondary */
+  --muted: #64748b;
+  --muted-foreground: oklch(0.85 0 0); /* Lightened muted text for better contrast */
+  --accent: #f472b6;
+  --accent-foreground: oklch(0.985 0 0); /* White text on accent */
   --destructive: oklch(0.577 0.245 27.325); /* Red destructive */
   --destructive-foreground: oklch(0.985 0 0); /* White text on destructive */
   --border: oklch(0.922 0 0); /* Border color */
@@ -120,6 +122,22 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.bg-background {
+  background-color: var(--background);
+}
+.text-foreground {
+  color: var(--foreground);
+}
+.bg-primary {
+  background-color: var(--primary);
+}
+.bg-accent {
+  background-color: var(--accent);
+}
+.bg-muted {
+  background-color: var(--muted);
 }
 
 /* Added custom animations for Mimicker AI */
