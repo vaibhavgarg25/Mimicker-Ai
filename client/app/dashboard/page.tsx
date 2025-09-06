@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,59 +14,72 @@ import {
   Download,
   Calendar,
   Clock,
-  Trash2,
-  Play,
-  Settings,
-  BarChart3,
   Zap,
   User,
-  LogOut,
+  Settings,
+  BarChart3,
 } from "lucide-react"
 
 export default function DashboardPage() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadedVideos, setUploadedVideos] = useState<any[]>([])
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    joinDate: "",
+    scriptsGenerated: 0,
+    totalUploadTime: "0h",
+    successRate: "0%",
+  })
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Mock user data
-  const userData = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    joinDate: "January 2024",
-    scriptsGenerated: 12,
-    totalUploadTime: "2.5 hours",
-    successRate: "98%",
-  }
+  // Fetch user data from localStorage
+  useEffect(() => {
+    const userName = localStorage.getItem("userName")
+    const userEmail = localStorage.getItem("userEmail")
+    const joinDate = localStorage.getItem("joinDate") || new Date().toLocaleDateString()
+    setUserData((prev) => ({
+      ...prev,
+      name: userName || "User",
+      email: userEmail || "",
+      joinDate, 
+      scriptsGenerated: 5, 
+      totalUploadTime: "1.5h",
+      successRate: "90%",
+    })) 
+    
+  }, [])
 
-  // Mock saved scripts data
-  const savedScripts = [
-    {
-      id: 1,
-      name: "Login Automation",
-      created: "2024-01-15",
-      duration: "5.2s",
-      status: "completed",
-      thumbnail: "/video-thumbnail.png",
-    },
-    {
-      id: 2,
-      name: "Form Submission",
-      created: "2024-01-14",
-      duration: "8.1s",
-      status: "processing",
-      thumbnail: "/video-thumbnail.png",
-    },
-    {
-      id: 3,
-      name: "Data Entry Workflow",
-      created: "2024-01-12",
-      duration: "12.5s",
-      status: "completed",
-      thumbnail: "/video-thumbnail.png",
-    },
-  ]
+  // Fetch videos from backend
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) return
 
+      try {
+        const res = await fetch("http://localhost:8000/api/videos/my-videos", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!res.ok) throw new Error("Failed to fetch videos")
+
+        const data = await res.json()
+        setUploadedVideos(data.data.videos || [])
+      } catch (err) {
+        console.error(err)
+        toast.error("Could not load uploaded videos")
+      }
+    }
+
+    fetchVideos()
+  }, [])
+
+  // Select file
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -80,33 +92,62 @@ export default function DashboardPage() {
     }
   }
 
+  // Upload file
   const handleUpload = async () => {
     if (!selectedFile) {
       toast.error("Please select a video file first")
       return
     }
 
+    const token = localStorage.getItem("token")
+    if (!token) {
+      toast.error("You must be signed in to upload")
+      return
+    }
+
     setIsUploading(true)
     setUploadProgress(0)
 
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsUploading(false)
-          toast.success("Video uploaded successfully! Processing automation script...")
-          setSelectedFile(null)
-          return 100
-        }
-        return prev + 10
-      })
-    }, 300)
+    const formData = new FormData()
+    formData.append("video", selectedFile)
+
+    const xhr = new XMLHttpRequest()
+    xhr.open("POST", "http://localhost:8000/api/videos/upload", true)
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`)
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100)
+        setUploadProgress(percentComplete)
+      }
+    }
+
+    xhr.onload = () => {
+      setIsUploading(false)
+      if (xhr.status === 201) {
+        toast.success("Video uploaded successfully!")
+        const response = JSON.parse(xhr.responseText)
+
+        // Add new video from backend response
+        setUploadedVideos((prev) => [response.data, ...prev])
+        setSelectedFile(null)
+        setUploadProgress(100)
+      } else {
+        const response = JSON.parse(xhr.responseText || "{}")
+        toast.error(response.message || "Upload failed")
+      }
+    }
+
+    xhr.onerror = () => {
+      setIsUploading(false)
+      toast.error("Upload failed. Please try again.")
+    }
+
+    xhr.send(formData)
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+  // Drag & drop
+  const handleDragOver = (e: React.DragEvent) => e.preventDefault()
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
@@ -130,10 +171,6 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground mt-1">Welcome back, {userData.name}</p>
           </div>
-          <Button variant="outline" className="gap-2 bg-transparent">
-            <LogOut className="size-4" />
-            Sign Out
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -183,7 +220,7 @@ export default function DashboardPage() {
                       {isUploading ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Processing...
+                          Uploading...
                         </>
                       ) : (
                         <>
@@ -207,64 +244,56 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Recent Scripts */}
+            {/* Recent Uploads */}
             <Card className="border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileVideo className="size-5" />
-                  Recent Scripts
+                  Recent Uploads
                 </CardTitle>
-                <CardDescription>Your latest automation scripts</CardDescription>
+                <CardDescription>Your uploaded videos</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {savedScripts.map((script) => (
-                    <div
-                      key={script.id}
-                      className="flex items-center gap-4 p-4 rounded-lg border border-primary/10 hover:border-primary/30 transition-colors"
-                    >
-                      <img
-                        src={script.thumbnail || "/placeholder.svg"}
-                        alt={script.name}
-                        className="w-20 h-15 rounded object-cover bg-primary/10"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold">{script.name}</h3>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="size-3" />
-                            {script.created}
+                {uploadedVideos.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No videos uploaded yet.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {uploadedVideos.map((video, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-4 rounded-lg border border-primary/10 hover:border-primary/30 transition-colors"
+                      >
+                        <div>
+                          <h3 className="font-semibold">{video.original_name}</h3>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                            <div className="flex items-center gap-1">
+                              <Calendar className="size-3" />
+                              {video.upload_timestamp
+                                ? new Date(video.upload_timestamp).toLocaleDateString()
+                                : new Date().toLocaleDateString()}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="size-3" />
+                              {video.duration || "—"}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="size-3" />
-                            {script.duration}
-                          </div>
-                          <Badge variant={script.status === "completed" ? "default" : "secondary"} className="text-xs">
-                            {script.status}
-                          </Badge>
                         </div>
+                        <Badge
+                          variant={video.status === "completed" ? "default" : "secondary"}
+                          className="text-xs"
+                        >
+                          {video.status || "processing"}
+                        </Badge>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm">
-                          <Play className="size-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Download className="size-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
-                          <Trash2 className="size-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* User Stats */}
             <Card className="border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -288,7 +317,6 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Quick Actions */}
             <Card className="border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -309,23 +337,6 @@ export default function DashboardPage() {
                   <Download className="size-4" />
                   Export All Scripts
                 </Button>
-              </CardContent>
-            </Card>
-
-            {/* Usage Tips */}
-            <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle>Pro Tips</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                  <p className="font-medium text-primary mb-1">Better Quality</p>
-                  <p className="text-muted-foreground">Record in 1080p for more accurate automation scripts</p>
-                </div>
-                <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                  <p className="font-medium text-primary mb-1">Clear Actions</p>
-                  <p className="text-muted-foreground">Make deliberate, slow movements for better detection</p>
-                </div>
               </CardContent>
             </Card>
           </div>
