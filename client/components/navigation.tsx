@@ -71,9 +71,6 @@ export function Navigation() {
 
           {isLoggedIn && (
             <div className="flex items-center gap-4 ml-6">
-              <span className="px-3 py-1 text-xs rounded-full bg-muted text-muted-foreground">
-                {userName}
-              </span>
               <Button
                 variant="outline"
                 size="sm"
@@ -115,7 +112,6 @@ export function Navigation() {
             {/* User Info & Logout */}
             {isLoggedIn && (
               <div className="flex flex-col gap-3 border-t pt-4">
-                <span className="text-sm text-muted-foreground">{userEmail}</span>
                 <Button
                   variant="outline"
                   onClick={() => {
