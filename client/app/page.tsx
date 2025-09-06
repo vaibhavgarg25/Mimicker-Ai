@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,10 +12,22 @@ import { Sparkles, ArrowRight, Code, Globe, Brain, Shield } from "lucide-react"
 type ProcessingStep = "upload" | "analyzing" | "generating" | "complete"
 
 export default function MimickerAI() {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState<ProcessingStep>("upload")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [generatedScript, setGeneratedScript] = useState("")
   const [copied, setCopied] = useState(false)
+
+  // Removed useEffect for automatic redirect
+  // Instead, handle login check in button click:
+  const handleGetStarted = () => {
+    const userLoggedIn = localStorage.getItem("token") // or your auth key
+    if (userLoggedIn) {
+      router.push("/dashboard")
+    } else {
+      router.push("/signup")
+    }
+  }
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -123,11 +136,12 @@ export default function MimickerAI() {
           <Button
             size="lg"
             className="animate-pulse-glow hover:scale-105 transition-transform duration-200"
-            onClick={() => (window.location.href = "/profile")}
+            onClick={handleGetStarted}
           >
             Get Started
             <ArrowRight className="ml-2 size-4" />
           </Button>
+
         </div>
 
         {/* Floating Elements */}
@@ -202,11 +216,19 @@ export default function MimickerAI() {
             <Button
               size="lg"
               className="animate-pulse-glow hover:scale-105 transition-transform duration-200"
-              onClick={() => (window.location.href = "/profile")}
+              onClick={() => {
+                const userLoggedIn = localStorage.getItem("token")
+                if (userLoggedIn) {
+                  router.push("/dashboard") 
+                } else {
+                  router.push("/signup")
+                }
+              }}
             >
               Sign Up to Get Started
               <ArrowRight className="ml-2 size-4" />
             </Button>
+
           </div>
         </div>
       </section>
