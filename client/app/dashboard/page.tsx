@@ -114,70 +114,99 @@ export default function DashboardPage() {
   }
 
   // Upload video to backend
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      toast.error("Please select a video first")
-      return
-    }
-    const token = localStorage.getItem("token")
-    if (!token) {
-      toast.error("You must be signed in")
-      return
-    }
-
-    setIsUploading(true)
-    setUploadProgress(0)
-    const formData = new FormData()
-    formData.append("video", selectedFile)
-
-    const xhr = new XMLHttpRequest()
-    xhr.open("POST", "http://localhost:8000/api/videos/upload", true)
-    xhr.setRequestHeader("Authorization", `Bearer ${token}`)
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        setUploadProgress(Math.round((event.loaded / event.total) * 100))
-      }
-    }
-
-    xhr.onload = () => {
-      setIsUploading(false)
-      if (xhr.status === 201) {
-        toast.success("Video uploaded successfully!")
-        const response = JSON.parse(xhr.responseText)
-        setUploadedVideos((prev) => [response.data, ...prev])
-        setSelectedFile(null)
-        setUploadProgress(100)
-        setCurrentStep(2) // Move to analysis step
-      } else {
-        const response = JSON.parse(xhr.responseText || "{}")
-        toast.error(response.message || "Upload failed")
-      }
-    }
-
-    xhr.onerror = () => {
-      setIsUploading(false)
-      toast.error("Upload failed. Please try again.")
-    }
-
-    xhr.send(formData)
+  // Upload video to backend
+const handleUpload = async () => {
+  if (!selectedFile) {
+    toast.error("Please select a video first")
+    return
+  }
+  const token = localStorage.getItem("token")
+  if (!token) {
+    toast.error("You must be signed in")
+    return
   }
 
-  // Analyze video (simulate or call backend AI)
-  const handleAnalyze = async () => {
-    setIsAnalyzing(true)
-    setTimeout(() => {
-      setAnalysisResult({
-        detectedActions: ["Click login button", "Enter username", "Enter password", "Submit form"],
-        estimatedDuration: "5.2 seconds",
-        complexity: "Medium",
-        requiredCredentials: ["Username", "Password"],
+  setIsUploading(true)
+  setUploadProgress(0)
+  const formData = new FormData()
+  formData.append("video", selectedFile)
+
+  try {
+    const res = await fetch("http://localhost:8000/api/videos/upload", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    })
+
+    if (!res.ok) throw new Error("Upload failed")
+    const data = await res.json()
+    const uploadedVideo = data.data 
+    console.log(uploadedVideo)
+
+    setUploadedVideos((prev) => [uploadedVideo, ...prev])
+    setSelectedFile(null)
+    setUploadProgress(100)
+    toast.success("Video uploaded successfully!")
+
+    // Store video_id for analysis
+    setAnalysisResult(null)
+    localStorage.setItem("lastVideoId", uploadedVideo.video_id)
+    setCurrentStep(2)
+  } catch (err: any) {
+    toast.error(err.message || "Upload failed")
+  } finally {
+    setIsUploading(false)
+  }
+}
+
+// Analyze video using backend API
+const handleAnalyze = async () => {
+  const token = localStorage.getItem("token")
+  const videoId = localStorage.getItem("lastVideoId")
+  if (!token || !videoId) {
+    toast.error("Missing token or video ID")
+    return
+  }
+
+  setIsAnalyzing(true)
+  try {
+    // Step 1: Trigger extraction
+    const triggerRes = await fetch(`http://localhost:8000/api/extraction/extract/${videoId}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!triggerRes.ok) throw new Error("Failed to trigger extraction")
+
+    // Step 2: Poll status
+    let status = "processing"
+    while (status === "processing" || status === "queued") {
+      await new Promise((resolve) => setTimeout(resolve, 3000)) // wait 3s
+      const statusRes = await fetch(`http://localhost:8000/api/extraction/status/${videoId}`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      setIsAnalyzing(false)
-      toast.success("Video analysis completed!")
-      setCurrentStep(3)
-    }, 3000)
+      const statusData = await statusRes.json()
+      status = statusData.data?.extraction_status || "failed"
+    }
+
+    if (status !== "completed") throw new Error("Extraction failed")
+
+    // Step 3: Fetch results
+    const resultsRes = await fetch(`http://localhost:8000/api/extraction/results/${videoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    const resultsData = await resultsRes.json()
+
+    setAnalysisResult(resultsData.data)
+    toast.success("Video analysis completed!")
+    setCurrentStep(3)
+  } catch (err: any) {
+    console.error(err)
+    toast.error(err.message || "Analysis failed")
+  } finally {
+    setIsAnalyzing(false)
   }
+}
+
 
   // Run automation script (simulate backend)
   const handleRunScript = async () => {
