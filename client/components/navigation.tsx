@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, LogOut } from "lucide-react"
@@ -12,6 +13,8 @@ export function Navigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
+
+  const pathname = usePathname()
 
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -40,7 +43,7 @@ export function Navigation() {
     { href: "/", label: "HOME" },
     { href: "/about", label: "ABOUT" },
     { href: "/manual", label: "MANUAL" },
-    { href: "/how-to-use", label: "HOW TO USE" },
+    { href: "/how-to-use", label: "HELP" },
     ...(isLoggedIn
       ? [{ href: "/dashboard", label: "DASHBOARD" }]
       : [{ href: "/signup", label: "LOGIN / SIGNUP" }]),
@@ -49,7 +52,7 @@ export function Navigation() {
   return (
     <nav className="fixed top-0 left-0 z-50 w-full bg-transparent text-white">
       <div className="flex h-16 items-center justify-between px-8">
-        {/* Logo (left side) */}
+        {/* Logo */}
         <Link
           href="/"
           className="font-bold text-lg tracking-widest text-white"
@@ -59,15 +62,22 @@ export function Navigation() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-mono tracking-wider hover:text-primary transition-colors"
-            >
-              [ {item.label} ]
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-mono tracking-wider transition-colors 
+                  ${isActive
+                    ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                    : "text-white hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                  }`}
+              >
+                [ {item.label} ]
+              </Link>
+            )
+          })}
 
           {isLoggedIn && (
             <div className="flex items-center gap-4 ml-6">
@@ -95,21 +105,26 @@ export function Navigation() {
             side="right"
             className="w-[280px] flex flex-col justify-between bg-black text-white"
           >
-            {/* Links */}
             <div className="flex flex-col gap-6 mt-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-base font-mono tracking-wider hover:text-primary transition-colors"
-                >
-                  [ {item.label} ]
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`text-base font-mono tracking-wider transition-colors 
+                      ${isActive
+                        ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                        : "text-white hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                      }`}
+                  >
+                    [ {item.label} ]
+                  </Link>
+                )
+              })}
             </div>
 
-            {/* User Info & Logout */}
             {isLoggedIn && (
               <div className="flex flex-col gap-3 border-t pt-4">
                 <Button

@@ -1,9 +1,15 @@
-import { Navigation } from "@/components/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { VideoIcon, Eye, MessageSquare, FileCode, Play } from "lucide-react"
-import { CodeBlock } from "@/components/ui/code-block"
-import { Meteors } from "@/components/ui/meteors"
+import { Navigation } from "@/components/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { VideoIcon, Eye, MessageSquare, FileCode, Play } from "lucide-react";
+import { CodeBlock } from "@/components/ui/code-block";
+import { Meteors } from "@/components/ui/meteors";
 
 export default function ManualPage() {
   const technicalFlow = [
@@ -17,27 +23,31 @@ export default function ManualPage() {
       step: "Computer Vision",
       icon: Eye,
       description: "AI analyzes visual elements",
-      technical: "Object detection, UI element recognition, OCR for text extraction",
+      technical:
+        "Object detection, UI element recognition, OCR for text extraction",
     },
     {
       step: "Natural Language Processing",
       icon: MessageSquare,
       description: "Understanding user intent",
-      technical: "Action classification, workflow pattern recognition, context analysis",
+      technical:
+        "Action classification, workflow pattern recognition, context analysis",
     },
     {
       step: "Script Generation",
       icon: FileCode,
       description: "JSON automation script creation",
-      technical: "Selenium-compatible selectors, action sequencing, error handling",
+      technical:
+        "Selenium-compatible selectors, action sequencing, error handling",
     },
     {
       step: "Execution Ready",
       icon: Play,
       description: "Ready-to-run automation",
-      technical: "Cross-browser compatibility, timing optimization, validation checks",
+      technical:
+        "Cross-browser compatibility, timing optimization, validation checks",
     },
-  ]
+  ];
 
   const sampleScript = `{
   "name": "Login Automation",
@@ -102,7 +112,7 @@ export default function ManualPage() {
     "timeout_action": "screenshot_and_exit",
     "fallback_selectors": true
   }
-}`
+}`;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -111,15 +121,20 @@ export default function ManualPage() {
       <div className="container mx-auto px-4 py-20">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">Technical Manual</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-balance">
-            Deep dive into how Mimicker AI transforms your screen recordings into intelligent automation scripts
+          <h1 className="text-4xl md:text-6xl font-thin tracking-wider mb-6 text-balance text-foreground uppercase">
+            Technical Manual
+          </h1>
+          <p className="text-xl font-thin tracking-wide text-foreground/70 max-w-3xl mx-auto text-balance leading-relaxed">
+            Deep dive into how Mimicker AI transforms your screen recordings
+            into intelligent automation scripts
           </p>
         </div>
 
         {/* Technical Flow */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works Under the Hood</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            How It Works Under the Hood
+          </h2>
 
           <div className="max-w-4xl mx-auto">
             {technicalFlow.map((item, index) => (
@@ -128,7 +143,9 @@ export default function ManualPage() {
                   <div className="size-16 rounded-full bg-primary flex items-center justify-center mb-4">
                     <item.icon className="size-8 text-primary-foreground" />
                   </div>
-                  {index < technicalFlow.length - 1 && <div className="w-px h-16 bg-border" />}
+                  {index < technicalFlow.length - 1 && (
+                    <div className="w-px h-16 bg-border" />
+                  )}
                 </div>
 
                 <Card className="flex-1 border-primary/20">
@@ -137,10 +154,14 @@ export default function ManualPage() {
                       <Badge variant="secondary">{index + 1}</Badge>
                       <CardTitle className="text-xl">{item.step}</CardTitle>
                     </div>
-                    <CardDescription className="text-lg">{item.description}</CardDescription>
+                    <CardDescription className="text-lg">
+                      {item.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground font-mono text-sm bg-muted/50 p-3 rounded">{item.technical}</p>
+                    <p className="text-muted-foreground font-mono text-sm bg-muted/50 p-3 rounded">
+                      {item.technical}
+                    </p>
                   </CardContent>
                 </Card>
               </div>
@@ -150,7 +171,9 @@ export default function ManualPage() {
 
         {/* Sample Script */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Sample JSON Script Output</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Sample JSON Script Output
+          </h2>
 
           <Card className="max-w-4xl mx-auto border-primary/20">
             <CardHeader>
@@ -158,46 +181,63 @@ export default function ManualPage() {
                 <FileCode className="size-5 text-primary" />
                 automation-script.json
               </CardTitle>
-              <CardDescription>Example of a generated automation script for a login workflow</CardDescription>
+              <CardDescription>
+                Example of a generated automation script for a login workflow
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <CodeBlock code={sampleScript} language="json" filename="automation-script.json" />
+              <CodeBlock
+                code={sampleScript}
+                language="json"
+                filename="automation-script.json"
+              />
             </CardContent>
           </Card>
         </div>
 
         {/* Key Features */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12">Script Features</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Script Features
+          </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
                 title: "Smart Selectors",
-                description: "Robust CSS and XPath selectors with fallback options for reliability",
+                description:
+                  "Robust CSS and XPath selectors with fallback options for reliability",
               },
               {
                 title: "Variable Support",
-                description: "Parameterized scripts with placeholder variables for reusability",
+                description:
+                  "Parameterized scripts with placeholder variables for reusability",
               },
               {
                 title: "Error Handling",
-                description: "Built-in retry logic and graceful failure handling",
+                description:
+                  "Built-in retry logic and graceful failure handling",
               },
               {
                 title: "Timing Control",
-                description: "Intelligent wait conditions and timing optimization",
+                description:
+                  "Intelligent wait conditions and timing optimization",
               },
               {
                 title: "Cross-Browser",
-                description: "Compatible with Chrome, Firefox, Safari, and Edge",
+                description:
+                  "Compatible with Chrome, Firefox, Safari, and Edge",
               },
               {
                 title: "Framework Agnostic",
-                description: "Works with Selenium, Puppeteer, Playwright, and more",
+                description:
+                  "Works with Selenium, Puppeteer, Playwright, and more",
               },
             ].map((feature, index) => (
-              <Card key={index} className="border-primary/20 hover:border-primary/40 transition-colors">
+              <Card
+                key={index}
+                className="border-primary/20 hover:border-primary/40 transition-colors"
+              >
                 <CardHeader>
                   <CardTitle className="text-lg">{feature.title}</CardTitle>
                 </CardHeader>
@@ -233,5 +273,5 @@ export default function ManualPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

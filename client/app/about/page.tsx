@@ -1,54 +1,64 @@
-'use client'
+"use client";
 
-
-import { Navigation } from "@/components/navigation"
-import SpotlightCard from "@/components/SpotlightCard"
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sparkles, Target, Users, Lightbulb } from "lucide-react"
-import { Plasma } from "@/components/Plasma/plasma"
+import { Navigation } from "@/components/navigation";
+import SpotlightCard from "@/components/SpotlightCard";
+import {
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sparkles, Target, Users, Lightbulb } from "lucide-react";
 
 export default function AboutPage() {
   const teamMembers = [
     {
-      name: "Alex Chen",
+      name: "Dilip S",
       role: "AI Engineer",
-      avatar: "/professional-asian-male-headshot.png",
-      initials: "AC",
+      avatar: "/team/Dilip.jpg",
+      initials: "DS",
     },
     {
-      name: "Sarah Johnson",
+      name: "Prachi P",
       role: "Product Designer",
-      avatar: "/professional-headshot-female.png",
-      initials: "SJ",
+      avatar: "/team/Prachi.png",
+      initials: "PP",
     },
     {
-      name: "Mike Rodriguez",
+      name: "Vaibhav G",
       role: "Full Stack Developer",
-      avatar: "/professional-headshot-hispanic-male.jpg",
-      initials: "MR",
+      avatar: "/team/Vaibhav.jpg",
+      initials: "VG",
     },
-  ]
+    {
+      name: "Mervin",
+      role: "Frontend Developer",
+      avatar: "/team/Mervin.jpg",
+      initials: "M",
+    },
+  ];
 
   return (
-    <div className="min-h-screen relative" style={{ backgroundColor: "#050505" }}>
-      
-
+    <div
+      className="min-h-screen relative"
+      style={{ backgroundColor: "#050505" }}
+    >
       <div className="relative z-10">
         <Navigation />
 
         <div className="container mx-auto px-4 py-20">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            
-
             <h1 className="text-4xl md:text-6xl font-thin tracking-wider mb-6 text-balance text-foreground uppercase">
               Revolutionizing Web Automation
             </h1>
 
             <p className="text-xl font-thin tracking-wide text-foreground/70 max-w-3xl mx-auto text-balance leading-relaxed">
-              We believe that automation should be accessible to everyone, not just developers. That's why we created
-              Mimicker AI - to democratize web automation through the power of artificial intelligence.
+              We believe that automation should be accessible to everyone, not
+              just developers. That's why we created Mimicker AI - to
+              democratize web automation through the power of artificial
+              intelligence.
             </p>
           </div>
 
@@ -68,9 +78,10 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-foreground/70 font-thin tracking-wide leading-relaxed">
-                  Millions of people perform repetitive web tasks daily - data entry, form filling, content management,
-                  and more. Traditional automation tools require programming knowledge, making them inaccessible to most
-                  users who need them most.
+                  Millions of people perform repetitive web tasks daily - data
+                  entry, form filling, content management, and more. Traditional
+                  automation tools require programming knowledge, making them
+                  inaccessible to most users who need them most.
                 </p>
               </CardContent>
             </SpotlightCard>
@@ -89,31 +100,22 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-foreground/70 font-thin tracking-wide leading-relaxed">
-                  Mimicker AI bridges this gap by allowing users to simply record their actions. Our advanced AI
-                  analyzes the recording, understands the workflow, and generates clean, executable automation scripts
-                  that can be run anywhere.
+                  Mimicker AI bridges this gap by allowing users to simply
+                  record their actions. Our advanced AI analyzes the recording,
+                  understands the workflow, and generates clean, executable
+                  automation scripts that can be run anywhere.
                 </p>
               </CardContent>
             </SpotlightCard>
           </div>
 
-          {/* Team Section */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/5 border border-foreground/10 mb-8">
-              <Users className="size-4 text-foreground/70" />
-              <span className="text-sm font-thin tracking-wider text-foreground/70 uppercase">Meet the Team</span>
-            </div>
-
-            <h2 className="text-3xl md:text-4xl font-thin tracking-wider mb-6 text-foreground uppercase">
-              Built by Automation Enthusiasts
-            </h2>
-            <p className="text-xl font-thin tracking-wide text-foreground/70 max-w-2xl mx-auto leading-relaxed">
-              Our diverse team combines expertise in AI, design, and development to create the most intuitive automation
-              platform.
-            </p>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-thin tracking-wider mb-6 text-balance text-foreground uppercase">
+              MEET THE TEAM{" "}
+            </h1>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {/* Team Section */}
+          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {teamMembers.map((member, index) => (
               <SpotlightCard
                 key={index}
@@ -121,12 +123,17 @@ export default function AboutPage() {
                 spotlightColor="rgba(255, 107, 53, 0.15)"
               >
                 <CardHeader>
-                  <Avatar className="size-20 mx-auto mb-4">
-                    <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
+                  <Avatar className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
+                    <AvatarImage
+                      src={member.avatar}
+                      alt={member.name}
+                      className="object-cover w-full h-full"
+                    />
                     <AvatarFallback className="text-lg font-semibold bg-foreground/10 text-foreground">
                       {member.initials}
                     </AvatarFallback>
                   </Avatar>
+
                   <CardTitle className="text-xl font-thin tracking-wide text-foreground uppercase">
                     {member.name}
                   </CardTitle>
@@ -140,5 +147,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
