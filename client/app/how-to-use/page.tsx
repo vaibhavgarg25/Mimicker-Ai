@@ -66,14 +66,18 @@ export default function HowToUsePage() {
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
 
-      <div className="container mx-auto px-4 py-20">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">How to Use Mimicker AI</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-balance">
-            Follow these simple steps to transform your manual web tasks into automated scripts
-          </p>
-        </div>
+     <div className="container mx-auto px-4 py-20">
+  {/* Hero Section */}
+  <div className="text-center mb-16">
+    <h1 className="text-4xl md:text-6xl font-thin tracking-wider mb-6 text-balance text-foreground uppercase">
+      How to Use Mimicker AI
+    </h1>
+    <p className="text-xl font-thin tracking-wide text-foreground/70 max-w-3xl mx-auto text-balance leading-relaxed">
+      Follow these simple steps to transform your manual web tasks into automated scripts
+    </p>
+  </div>
+
+
 
         {/* Steps */}
         <div className="max-w-4xl mx-auto mb-16">
