@@ -74,9 +74,9 @@ export default function ProfilePage() {
 
       // Save token/user info
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userName", name);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("userEmail", data.data.user.email);
+      localStorage.setItem("userName", data.data.user.name);
+      localStorage.setItem("token", data.data.token);
 
       window.dispatchEvent(new Event("storage"));
 

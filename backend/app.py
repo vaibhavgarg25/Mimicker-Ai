@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from config.database import init_db
 from controllers.auth_controller import auth_bp
 from controllers.video_controller import video_bp
+from controllers.automation_controller import automation_bp
 from flask_cors import CORS
 
 # Load environment variables
@@ -31,6 +32,7 @@ def create_app():
     # Register existing blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(video_bp, url_prefix='/api/videos')
+    app.register_blueprint(automation_bp, url_prefix='/api/automation')
     
     # Register extraction blueprint AFTER database initialization
     try:
@@ -48,7 +50,8 @@ def create_app():
             'features': {
                 'video_upload': True,
                 'authentication': True,
-                'action_extraction': 'extraction_bp' in [bp.name for bp in app.blueprints.values()]
+                'automation': True,
+                'mcp_integration': True
             }
         }), 200
     

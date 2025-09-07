@@ -49,41 +49,83 @@ class VideoAnalyzer:
             if video_file.state.name == "FAILED":
                 raise Exception("Video processing failed")
             
-            # Analyze the video
+            # Analyze the video with enhanced accuracy
             prompt = """
-            Analyze this tutorial video and extract step-by-step browser automation actions.
+            You are an expert at analyzing tutorial videos and extracting precise browser automation steps.
             
-            Watch the video carefully and identify:
-            1. What website or application is being demonstrated
-            2. Each user interaction (clicks, typing, navigation)
-            3. The sequence of actions performed
+            WATCH THIS VIDEO FRAME BY FRAME and identify EVERY action the user performs:
             
-            Return a JSON array of browser automation steps in this exact format:
+            1. OBSERVE CAREFULLY:
+               - What website does the user navigate to first?
+               - What EXACT text do they type? (character by character)
+               - What buttons/links do they click on?
+               - What is the sequence of their mouse movements and clicks?
+               - Do they scroll? If so, in which direction and how much?
+            
+            2. EXTRACT PRECISE ACTIONS:
+               - Record the EXACT text typed (not approximations)
+               - Note the EXACT sequence of clicks
+               - Identify the specific elements they interact with
+               - Capture any navigation between pages
+            
+            3. GENERATE ACCURATE AUTOMATION STEPS:
+               Return a JSON array that EXACTLY replicates what you see in the video.
+            
+            CRITICAL ACCURACY REQUIREMENTS:
+            - Use the EXACT text you see being typed (not similar words)
+            - Follow the EXACT sequence of actions shown
+            - Include ALL clicks and navigation steps
+            - Use precise selectors for the elements being clicked
+            
+            COMMON SCENARIOS TO DETECT:
+            
+            A) GOOGLE SEARCH WORKFLOW:
+            If you see Google search, use this pattern:
             [
-                {"action": "goto", "url": "https://example.com", "description": "Navigate to website"},
-                {"action": "click", "selector": "#login-button", "description": "Click login button"},
-                {"action": "type", "selector": "#username", "text": "example_user", "description": "Enter username"},
-                {"action": "type", "selector": "#password", "text": "password123", "description": "Enter password"},
-                {"action": "click", "selector": "#submit", "description": "Submit login form"}
+                {"action": "goto", "url": "https://www.google.com", "description": "Navigate to Google"},
+                {"action": "wait", "timeout": 2000, "description": "Wait for page load"},
+                {"action": "type", "selector": "textarea[name='q']", "text": "EXACT_TEXT_FROM_VIDEO", "description": "Type search query"},
+                {"action": "click", "selector": "input[name='btnK']", "description": "Click search button"},
+                {"action": "wait", "timeout": 3000, "description": "Wait for search results"},
+                {"action": "click", "selector": "h3 a", "description": "Click first search result"}
             ]
             
-            Supported actions:
-            - goto: Navigate to URL
-            - click: Click element (use specific CSS selectors like #id, .class, [data-testid="value"])
-            - type: Type text into input fields
-            - wait: Wait for element to appear
-            - scroll: Scroll page (direction: up/down/top/bottom)
-            - hover: Hover over element
-            - select: Select option from dropdown
+            B) YOUTUBE WORKFLOW:
+            If you see YouTube, use this pattern:
+            [
+                {"action": "goto", "url": "https://www.youtube.com", "description": "Navigate to YouTube"},
+                {"action": "wait", "timeout": 2000, "description": "Wait for page load"},
+                {"action": "type", "selector": "input[name='search_query']", "text": "EXACT_TEXT_FROM_VIDEO", "description": "Type in YouTube search"},
+                {"action": "click", "selector": "button[id='search-icon-legacy']", "description": "Click search button"},
+                {"action": "wait", "timeout": 3000, "description": "Wait for search results"},
+                {"action": "click", "selector": "a[href*='/watch?v=']", "description": "Click on video"}
+            ]
             
-            Important guidelines:
-            - Use specific, reliable CSS selectors (prefer IDs over classes)
-            - Include realistic URLs and text content
-            - Add descriptive descriptions for each step
-            - Make sure the sequence is logical and complete
-            - If you see form submissions, include proper selectors for submit buttons
+            C) DIRECT YOUTUBE VIDEO:
+            If they go directly to a YouTube video:
+            [
+                {"action": "goto", "url": "EXACT_URL_FROM_VIDEO", "description": "Navigate to YouTube video"},
+                {"action": "wait", "timeout": 3000, "description": "Wait for video to load"}
+            ]
             
-            Only return the JSON array, no additional text.
+            SELECTOR REFERENCE:
+            - Google search box: "textarea[name='q']" or "input[name='q']"
+            - Google search button: "input[name='btnK']" or "button[type='submit']"
+            - Google first result: "h3 a" or ".yuRUbf a"
+            - YouTube search box: "input[name='search_query']"
+            - YouTube search button: "button[id='search-icon-legacy']"
+            - YouTube video links: "a[href*='/watch?v=']"
+            - Generic buttons: "button", "input[type='submit']"
+            - Generic links: "a[href]"
+            
+            IMPORTANT:
+            - Extract the EXACT text you see being typed
+            - Follow the EXACT sequence shown in the video
+            - Don't add extra steps not shown in the video
+            - Don't modify or "improve" the user's actions
+            - Replicate their workflow precisely
+            
+            Return ONLY the JSON array, no other text:
             """
             
             response = self.model.generate_content([video_file, prompt])
@@ -104,6 +146,53 @@ class VideoAnalyzer:
                 
         except Exception as e:
             print(f"❌ Local video analysis failed: {e}")
+            print("🔄 Attempting alternative analysis approach...")
+            
+            # Try alternative analysis with simpler prompt
+            try:
+                video_file = genai.upload_file(path=video_path)
+                
+                # Wait for processing
+                import time
+                while video_file.state.name == "PROCESSING":
+                    time.sleep(2)
+                    video_file = genai.get_file(video_file.name)
+                
+                if video_file.state.name != "FAILED":
+                    # Simpler, more direct prompt
+                    simple_prompt = """
+                    Watch this video and tell me exactly what the person does step by step.
+                    
+                    Focus on:
+                    1. What website they visit
+                    2. What they type (exact text)
+                    3. What they click on
+                    4. Where they navigate
+                    
+                    Return as JSON array:
+                    [
+                        {"action": "goto", "url": "website_url", "description": "what they do"},
+                        {"action": "type", "selector": "input_selector", "text": "exact_text", "description": "what they type"},
+                        {"action": "click", "selector": "click_selector", "description": "what they click"}
+                    ]
+                    
+                    Only return the JSON, nothing else.
+                    """
+                    
+                    response = self.model.generate_content([video_file, simple_prompt])
+                    response_text = response.text.strip()
+                    
+                    json_start = response_text.find('[')
+                    json_end = response_text.rfind(']') + 1
+                    
+                    if json_start != -1 and json_end > json_start:
+                        json_str = response_text[json_start:json_end]
+                        steps = json.loads(json_str)
+                        print(f"✅ Alternative analysis extracted {len(steps)} steps")
+                        return steps
+            except Exception as e2:
+                print(f"❌ Alternative analysis also failed: {e2}")
+            
             print("🔄 Using fallback example steps")
             return self._get_example_steps()
     
@@ -197,36 +286,49 @@ class VideoAnalyzer:
     
     def _get_example_steps(self) -> List[Dict[str, Any]]:
         """
-        Fallback example steps for demonstration
+        Fallback example steps that demonstrate a complete search workflow with result clicking
         """
         return [
             {
                 "action": "goto",
-                "url": "https://httpbin.org/forms/post",
-                "description": "Navigate to demo form"
+                "url": "https://www.google.com",
+                "description": "Navigate to Google search"
+            },
+            {
+                "action": "wait",
+                "timeout": 2000,
+                "description": "Wait for page to load"
             },
             {
                 "action": "type",
-                "selector": "input[name='custname']",
-                "text": "John Doe",
-                "description": "Enter customer name"
+                "selector": "textarea[name='q']",
+                "text": "YouTube automation demo",
+                "description": "Type search query in Google search box"
             },
             {
-                "action": "type",
-                "selector": "input[name='custtel']",
-                "text": "555-1234",
-                "description": "Enter phone number"
-            },
-            {
-                "action": "type",
-                "selector": "input[name='custemail']",
-                "text": "john@example.com",
-                "description": "Enter email address"
+                "action": "wait",
+                "timeout": 1000,
+                "description": "Wait after typing"
             },
             {
                 "action": "click",
-                "selector": "input[type='submit']",
-                "description": "Submit the form"
+                "selector": "input[name='btnK']",
+                "description": "Click Google Search button"
+            },
+            {
+                "action": "wait",
+                "timeout": 3000,
+                "description": "Wait for search results to load"
+            },
+            {
+                "action": "click",
+                "selector": "h3 a",
+                "description": "Click on first search result"
+            },
+            {
+                "action": "wait",
+                "timeout": 3000,
+                "description": "Wait for result page to load"
             }
         ]
     

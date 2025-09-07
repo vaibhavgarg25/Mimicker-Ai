@@ -17,7 +17,10 @@ CORS(app)
 # Initialize services
 db = Database()
 video_analyzer = VideoAnalyzer()
-browser_automator = BrowserAutomator()
+# FORCE VISIBLE BROWSER FOR DEMO - NO HEADLESS MODE!
+print("🎬 FORCING VISIBLE BROWSER MODE FOR DEMO!")
+browser_automator = BrowserAutomator(headless=False)  # ALWAYS VISIBLE!
+print("🎬 Browser automation mode: VISIBLE (FORCED FOR DEMO)")
 
 @app.route('/analyze_video', methods=['POST'])
 def analyze_video():
@@ -221,4 +224,4 @@ def health_check():
     return jsonify({'status': 'healthy', 'timestamp': datetime.utcnow().isoformat()})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=8080)
