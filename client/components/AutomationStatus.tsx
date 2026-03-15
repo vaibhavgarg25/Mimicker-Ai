@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { 
+import {
   Brain, 
   Play, 
   CheckCircle, 
@@ -15,7 +15,7 @@ import {
   RefreshCw,
   AlertCircle
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface AutomationStatusProps {
   videoId: string;
@@ -37,8 +37,6 @@ export default function AutomationStatus({ videoId, onExecute }: AutomationStatu
   const [status, setStatus] = useState<StatusData | null>(null);
   const [loading, setLoading] = useState(true);
   const [executing, setExecuting] = useState(false);
-  const { toast } = useToast();
-
   const fetchStatus = async () => {
     try {
       const token = localStorage.getItem("token");

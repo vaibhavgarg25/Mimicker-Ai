@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from services.vision import VideoAnalyzer
 from services.browser import BrowserAutomator
 from services.db import Database
-from datetime import datetime
+from datetime import datetime, UTC
 import traceback
 
 load_dotenv()
@@ -21,6 +21,10 @@ video_analyzer = VideoAnalyzer()
 print("🎬 FORCING VISIBLE BROWSER MODE FOR DEMO!")
 browser_automator = BrowserAutomator(headless=False)  # ALWAYS VISIBLE!
 print("🎬 Browser automation mode: VISIBLE (FORCED FOR DEMO)")
+
+
+def utc_now():
+    return datetime.now(UTC)
 
 @app.route('/analyze_video', methods=['POST'])
 def analyze_video():
@@ -40,7 +44,7 @@ def analyze_video():
         # Store in database
         video_doc = {
             'video_url': video_url,
-            'uploaded_at': datetime.utcnow(),
+            'uploaded_at': utc_now(),
             'steps': steps
         }
         video_id = db.insert_video(video_doc)
@@ -75,7 +79,7 @@ def execute_browser_action():
             'status': 'completed' if result['success'] else 'failed',
             'log': result.get('log', []),
             'error': result.get('error'),
-            'created_at': datetime.utcnow()
+            'created_at': utc_now()
         }
         execution_id = db.insert_execution(execution_doc)
         
@@ -110,7 +114,7 @@ def fallback_llm():
             'execution_id': context.get('execution_id'),
             'error': error,
             'suggestion': suggestion,
-            'created_at': datetime.utcnow()
+            'created_at': utc_now()
         }
         db.insert_correction(correction_doc)
         
@@ -137,7 +141,7 @@ def run_task_from_video():
         # Store video
         video_doc = {
             'video_url': video_url,
-            'uploaded_at': datetime.utcnow(),
+            'uploaded_at': utc_now(),
             'steps': steps
         }
         video_id = db.insert_video(video_doc)
@@ -159,7 +163,7 @@ def run_task_from_video():
             'status': 'completed' if result['success'] else 'failed',
             'log': result.get('log', []),
             'error': result.get('error'),
-            'created_at': datetime.utcnow()
+            'created_at': utc_now()
         }
         execution_id = db.insert_execution(execution_doc)
         
@@ -221,7 +225,7 @@ def get_execution(execution_id):
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'timestamp': datetime.utcnow().isoformat()})
+    return jsonify({'status': 'healthy', 'timestamp': utc_now().isoformat()})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)

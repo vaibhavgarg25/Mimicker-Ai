@@ -53,54 +53,9 @@ def process_video_async(video_id: str, video_path: str, user_id: str):
             )
             analysis_id = analysis_repo.create_analysis(analysis)
             print(f"✅ Analysis completed with {len(steps)} steps")
-            
-            # Step 2: Execute automation
-            print("🤖 Starting automation...")
-            execution = AutomationExecution(
-                analysis_id=analysis_id,
-                video_id=video_id,
-                status='running'
-            )
-            execution_id = execution_repo.create_execution(execution)
-            
-            # Use the actual analyzed steps from the video
-            if steps and len(steps) > 0:
-                print(f"🎬 Executing browser automation with {len(steps)} steps extracted from video...")
-                # Execute automation via MCP server with real video steps
-                automation_result = mcp_client.execute_automation(steps, video_id)
-            else:
-                # Fallback: if no steps were extracted, show a simple demo
-                fallback_steps = [
-                    {
-                        "action": "goto",
-                        "url": "https://example.com",
-                        "description": "Fallback demo - no steps extracted from video"
-                    },
-                    {
-                        "action": "wait",
-                        "timeout": 3000,
-                        "description": "Video analysis did not extract actionable steps"
-                    }
-                ]
-                print(f"⚠️ No steps extracted from video, using fallback demo with {len(fallback_steps)} steps...")
-                automation_result = mcp_client.execute_automation(fallback_steps, video_id)
-            
-            if automation_result['success']:
-                exec_data = automation_result['data']
-                execution_repo.update_execution(execution_id, {
-                    'status': 'completed',
-                    'execution_id': exec_data.get('execution_id'),
-                    'log': exec_data.get('log', []),
-                    'updated_at': datetime.utcnow()
-                })
-                print("✅ Automation completed successfully")
-            else:
-                execution_repo.update_execution(execution_id, {
-                    'status': 'failed',
-                    'error': automation_result['error'],
-                    'updated_at': datetime.utcnow()
-                })
-                print(f"❌ Automation failed: {automation_result['error']}")
+
+            if not steps:
+                print("⚠️ Analysis completed but no actionable steps were extracted")
         else:
             # Save failed analysis
             analysis = VideoAnalysis(
@@ -126,6 +81,49 @@ def process_video_async(video_id: str, video_path: str, user_id: str):
         except:
             pass
 
+
+def execute_automation_async(analysis_id: str, video_id: str, steps: list):
+    try:
+        analysis_repo, execution_repo, _ = get_repositories()
+
+        execution = AutomationExecution(
+            analysis_id=analysis_id,
+            video_id=video_id,
+            status='running'
+        )
+        execution_id = execution_repo.create_execution(execution)
+
+        if not steps:
+            execution_repo.update_execution(execution_id, {
+                'status': 'failed',
+                'error': 'No automation steps were extracted from this video',
+                'updated_at': datetime.utcnow()
+            })
+            print("❌ Automation failed: no extracted steps available")
+            return
+
+        print(f"🎬 Executing browser automation with {len(steps)} extracted steps...")
+        automation_result = mcp_client.execute_automation(steps, video_id)
+
+        if automation_result['success']:
+            exec_data = automation_result['data']
+            execution_repo.update_execution(execution_id, {
+                'status': 'completed',
+                'execution_id': exec_data.get('execution_id'),
+                'log': exec_data.get('log', []),
+                'updated_at': datetime.utcnow()
+            })
+            print("✅ Automation completed successfully")
+        else:
+            execution_repo.update_execution(execution_id, {
+                'status': 'failed',
+                'error': automation_result['error'],
+                'updated_at': datetime.utcnow()
+            })
+            print(f"❌ Automation failed: {automation_result['error']}")
+    except Exception as e:
+        print(f"❌ Automation execution thread failed: {str(e)}")
+
 @automation_bp.route('/trigger/<video_id>', methods=['POST'])
 @jwt_required
 def trigger_automation(video_id):
@@ -150,17 +148,47 @@ def trigger_automation(video_id):
                 'message': 'Access denied'
             }), 403
         
-        # Check if analysis already exists
-        existing_analysis = analysis_repo.find_analysis_by_video_id(video_id)
-        if existing_analysis:
+        existing_execution = execution_repo.find_execution_by_video_id(video_id)
+        if existing_execution and existing_execution.get('status') in ('running', 'completed'):
             return jsonify({
                 'status': 'success',
-                'message': 'Analysis already exists',
+                'message': 'Automation already started',
                 'data': {
-                    'analysis_id': existing_analysis['_id'],
-                    'status': existing_analysis['status']
+                    'video_id': video_id,
+                    'status': existing_execution['status'],
+                    'execution_id': existing_execution.get('_id')
                 }
             }), 200
+
+        existing_analysis = analysis_repo.find_analysis_by_video_id(video_id)
+        if existing_analysis:
+            if existing_analysis['status'] != 'completed':
+                return jsonify({
+                    'status': 'success',
+                    'message': 'Analysis is still in progress',
+                    'data': {
+                        'analysis_id': existing_analysis['_id'],
+                        'status': existing_analysis['status']
+                    }
+                }), 200
+
+            steps = existing_analysis.get('steps', [])
+            thread = threading.Thread(
+                target=execute_automation_async,
+                args=(existing_analysis['_id'], video_id, steps)
+            )
+            thread.daemon = True
+            thread.start()
+
+            return jsonify({
+                'status': 'success',
+                'message': 'Automation execution started',
+                'data': {
+                    'video_id': video_id,
+                    'analysis_id': existing_analysis['_id'],
+                    'status': 'running'
+                }
+            }), 202
         
         # Check MCP server health
         if not mcp_client.health_check():

@@ -14,28 +14,16 @@ import { Sparkles, Target, Users, Lightbulb } from "lucide-react";
 export default function AboutPage() {
   const teamMembers = [
     {
-      name: "Dilip S",
-      role: "AI Engineer",
-      avatar: "/team/Dilip.jpg",
-      initials: "DS",
-    },
-    {
-      name: "Prachi P",
-      role: "Product Designer",
-      avatar: "/team/Prachi.png",
-      initials: "PP",
-    },
-    {
-      name: "Vaibhav G",
-      role: "Full Stack Developer",
-      avatar: "/team/Vaibhav.jpg",
-      initials: "VG",
-    },
-    {
       name: "Mervin",
-      role: "Frontend Developer",
+      role: "Developer",
       avatar: "/team/Mervin.jpg",
       initials: "M",
+    },
+    {
+      name: "Naman S",
+      role: "Developer",
+      avatar: "/team/Naman.jpg",
+      initials: "N",
     },
   ];
 
@@ -47,7 +35,7 @@ export default function AboutPage() {
       <div className="relative z-10">
         <Navigation />
 
-        <div className="container mx-auto px-4 py-20">
+        <div className="container mx-auto max-w-7xl px-4 py-20 md:px-8">
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-thin tracking-wider mb-6 text-balance text-foreground uppercase">
@@ -63,9 +51,9 @@ export default function AboutPage() {
           </div>
 
           {/* Problem & Solution */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 mb-20">
             <SpotlightCard
-              className="bg-foreground/5 border-foreground/10 backdrop-blur-sm"
+              className="h-full bg-foreground/5 border-foreground/10 backdrop-blur-sm"
               spotlightColor="rgba(255, 107, 53, 0.15)"
             >
               <CardHeader>
@@ -87,7 +75,7 @@ export default function AboutPage() {
             </SpotlightCard>
 
             <SpotlightCard
-              className="bg-foreground/5 border-foreground/10 backdrop-blur-sm"
+              className="h-full bg-foreground/5 border-foreground/10 backdrop-blur-sm"
               spotlightColor="rgba(255, 107, 53, 0.15)"
             >
               <CardHeader>
@@ -115,15 +103,15 @@ export default function AboutPage() {
             </h1>
           </div>
           {/* Team Section */}
-          <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="mx-auto grid max-w-3xl gap-8 place-items-center sm:grid-cols-2">
             {teamMembers.map((member, index) => (
               <SpotlightCard
                 key={index}
-                className="bg-foreground/5 border-foreground/10 backdrop-blur-sm text-center"
+                className="w-full max-w-sm bg-foreground/5 border-foreground/10 backdrop-blur-sm text-center"
                 spotlightColor="rgba(255, 107, 53, 0.15)"
               >
-                <CardHeader>
-                  <Avatar className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
+                <CardHeader className="items-center px-8 py-10">
+                  <Avatar className="mb-5 size-28 rounded-full overflow-hidden ring-1 ring-white/10">
                     <AvatarImage
                       src={member.avatar}
                       alt={member.name}

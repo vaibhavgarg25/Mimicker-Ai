@@ -1,0 +1,173 @@
+{
+  "users": [
+    {
+      "name": "Mervin",
+      "email": "mervin10122004@gmail.com",
+      "password_hash": "$2b$12$gGlYqzPlRuHff3QmpbuAjeZpty46oPXugYv3o/eOQjTErQNhbDPQC",
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:18.267828"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:18.267832"
+      },
+      "_id": "0aa526dc3e224b55a0750fee4b30661d"
+    }
+  ],
+  "videos": [
+    {
+      "filename": "b4b6ad5e81ef4b4da33f470bb615384b.mov",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "Screen Recording 2026-03-15 at 10.15.02.mov",
+      "file_size": 96618705,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:25.307694"
+      },
+      "status": "error",
+      "_id": "2de0eb042c9a405283a9e85d16675aa5",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:55.319849"
+      }
+    },
+    {
+      "filename": "147bba48b6f7438a8bab5c5f76367f7b.mov",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "Screen Recording 2026-03-15 at 10.15.02.mov",
+      "file_size": 96618705,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:24:44.458855"
+      },
+      "status": "error",
+      "_id": "96642e21bdf84142ac50826389960cfa",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:25:14.469020"
+      }
+    },
+    {
+      "filename": "4f96cdefd0b340a98ad074a3cbaf080f.mov",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "Screen Recording 2026-03-15 at 10.15.02.mov",
+      "file_size": 96618705,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:30:26.571677"
+      },
+      "status": "completed",
+      "_id": "d8b6249e7c47440a8e28f80ed0dfb6e7",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:31:09.778410"
+      }
+    }
+  ],
+  "video_analyses": [
+    {
+      "video_id": "2de0eb042c9a405283a9e85d16675aa5",
+      "steps": [],
+      "status": "failed",
+      "error": "Failed to connect to MCP server: HTTPConnectionPool(host='localhost', port=8080): Read timed out. (read timeout=30)",
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:55.318357"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:17:55.318370"
+      },
+      "_id": "4927236137384164a45df50f51719bee"
+    },
+    {
+      "video_id": "96642e21bdf84142ac50826389960cfa",
+      "steps": [],
+      "status": "failed",
+      "error": "Failed to connect to MCP server: HTTPConnectionPool(host='localhost', port=8080): Read timed out. (read timeout=30)",
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:25:14.467458"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:25:14.467472"
+      },
+      "_id": "d36ba805c1d544e384e725149a02cac1"
+    },
+    {
+      "video_id": "d8b6249e7c47440a8e28f80ed0dfb6e7",
+      "steps": [
+        {
+          "action": "goto",
+          "description": "Navigate to YouTube",
+          "url": "https://www.youtube.com"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for page load",
+          "timeout": 2000
+        },
+        {
+          "action": "click",
+          "description": "Click on YouTube search bar",
+          "selector": "input[name='search_query']"
+        },
+        {
+          "action": "type",
+          "description": "Type 'Me at the zoo' in search bar",
+          "selector": "input[name='search_query']",
+          "text": "Me at the zoo"
+        },
+        {
+          "action": "click",
+          "description": "Click search button",
+          "selector": "button[id='search-icon-legacy']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for search results",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Click on 'Me at the zoo' video",
+          "selector": "a[href*='/watch?v=']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for video to load and play",
+          "timeout": 5000
+        },
+        {
+          "action": "click",
+          "description": "Click video player to pause",
+          "selector": "div.html5-video-player"
+        },
+        {
+          "action": "click",
+          "description": "Click video player to play",
+          "selector": "div.html5-video-player"
+        },
+        {
+          "action": "click",
+          "description": "Click like button",
+          "selector": "button[aria-label='Like this video']"
+        }
+      ],
+      "status": "completed",
+      "error": null,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:31:09.777947"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:31:09.777951"
+      },
+      "_id": "2fe485ab77f443f197174a2972fa3d1b"
+    }
+  ],
+  "automation_executions": []
+}

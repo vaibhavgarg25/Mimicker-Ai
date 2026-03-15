@@ -7,11 +7,22 @@ from bson import ObjectId
 class UserRepository:
     def __init__(self):
         self.db = get_db()
+        if self.db is None:
+            raise Exception("Database not initialized. Please call init_db() first.")
         self.collection = self.db.users
+
+    def _build_id_query(self, user_id: str) -> Dict:
+        if getattr(self.db, "mode", None) == "local":
+            return {'_id': user_id}
+        return {'_id': ObjectId(user_id)}
     
     def create_user(self, user: User) -> Optional[str]:
         """Create a new user and return the user ID"""
         try:
+            existing_user = self.find_user_by_email(user.email)
+            if existing_user:
+                raise ValueError("User with this email already exists")
+
             user_dict = user.to_dict()
             del user_dict['_id']  # Remove _id to let MongoDB generate it
             
@@ -36,7 +47,7 @@ class UserRepository:
     def find_user_by_id(self, user_id: str) -> Optional[Dict]:
         """Find user by ID"""
         try:
-            user = self.collection.find_one({'_id': ObjectId(user_id)})
+            user = self.collection.find_one(self._build_id_query(user_id))
             if user:
                 user['_id'] = str(user['_id'])
             return user

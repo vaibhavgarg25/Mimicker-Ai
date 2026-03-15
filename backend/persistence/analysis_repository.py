@@ -10,6 +10,11 @@ class AnalysisRepository:
         if self.db is None:
             raise Exception("Database not initialized. Please call init_db() first.")
         self.collection = self.db.video_analyses
+
+    def _build_id_query(self, analysis_id: str) -> Dict[str, Any]:
+        if getattr(self.db, "mode", None) == "local":
+            return {'_id': analysis_id}
+        return {'_id': ObjectId(analysis_id)}
     
     def create_analysis(self, analysis: VideoAnalysis) -> str:
         """Create a new video analysis record"""
@@ -27,7 +32,7 @@ class AnalysisRepository:
     def find_analysis_by_id(self, analysis_id: str) -> Optional[Dict[str, Any]]:
         """Find analysis by ID"""
         try:
-            analysis = self.collection.find_one({'_id': ObjectId(analysis_id)})
+            analysis = self.collection.find_one(self._build_id_query(analysis_id))
             if analysis:
                 analysis['_id'] = str(analysis['_id'])
             return analysis
@@ -38,7 +43,7 @@ class AnalysisRepository:
         """Update analysis record"""
         try:
             result = self.collection.update_one(
-                {'_id': ObjectId(analysis_id)},
+                self._build_id_query(analysis_id),
                 {'$set': update_data}
             )
             return result.modified_count > 0
@@ -51,6 +56,11 @@ class ExecutionRepository:
         if self.db is None:
             raise Exception("Database not initialized. Please call init_db() first.")
         self.collection = self.db.automation_executions
+
+    def _build_id_query(self, execution_id: str) -> Dict[str, Any]:
+        if getattr(self.db, "mode", None) == "local":
+            return {'_id': execution_id}
+        return {'_id': ObjectId(execution_id)}
     
     def create_execution(self, execution: AutomationExecution) -> str:
         """Create a new automation execution record"""
@@ -68,7 +78,7 @@ class ExecutionRepository:
     def find_execution_by_id(self, execution_id: str) -> Optional[Dict[str, Any]]:
         """Find execution by ID"""
         try:
-            execution = self.collection.find_one({'_id': ObjectId(execution_id)})
+            execution = self.collection.find_one(self._build_id_query(execution_id))
             if execution:
                 execution['_id'] = str(execution['_id'])
             return execution
@@ -86,7 +96,7 @@ class ExecutionRepository:
         """Update execution record"""
         try:
             result = self.collection.update_one(
-                {'_id': ObjectId(execution_id)},
+                self._build_id_query(execution_id),
                 {'$set': update_data}
             )
             return result.modified_count > 0

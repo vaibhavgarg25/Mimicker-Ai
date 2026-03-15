@@ -15,6 +15,7 @@ motor
 playwright
 
 # Google AI/Gemini
+google-genai
 google-generativeai
 
 # MCP (Model Context Protocol)

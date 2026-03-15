@@ -6,7 +6,14 @@ from bson import ObjectId
 class VideoRepository:
     def __init__(self):
         self.db = get_db()
+        if self.db is None:
+            raise Exception("Database not initialized. Please call init_db() first.")
         self.collection = self.db.videos
+
+    def _build_id_query(self, video_id: str) -> Dict:
+        if getattr(self.db, "mode", None) == "local":
+            return {'_id': video_id}
+        return {'_id': ObjectId(video_id)}
     
     def create_video(self, video: Video) -> Optional[str]:
         """Save video metadata and return the video ID"""
@@ -33,9 +40,20 @@ class VideoRepository:
     def find_video_by_id(self, video_id: str) -> Optional[Dict]:
         """Find video by ID"""
         try:
-            video = self.collection.find_one({'_id': ObjectId(video_id)})
+            video = self.collection.find_one(self._build_id_query(video_id))
             if video:
                 video['_id'] = str(video['_id'])
             return video
         except Exception as e:
             raise Exception(f"Error finding video: {str(e)}")
+
+    def update_video(self, video_id: str, update_data: Dict) -> bool:
+        """Update video metadata"""
+        try:
+            result = self.collection.update_one(
+                self._build_id_query(video_id),
+                {'$set': update_data}
+            )
+            return result.modified_count > 0
+        except Exception as e:
+            raise Exception(f"Error updating video metadata: {str(e)}")

@@ -12,7 +12,7 @@ class MCPClient:
     
     def __init__(self):
         self.mcp_base_url = os.getenv('MCP_SERVER_URL', 'http://localhost:8080')
-        self.timeout = 30
+        self.timeout = int(os.getenv('MCP_ANALYZE_TIMEOUT', '180'))
     
     def analyze_video(self, video_path: str) -> Dict[str, Any]:
         """

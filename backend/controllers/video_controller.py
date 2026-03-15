@@ -35,6 +35,12 @@ def auto_analyze_video(video_id: str, video_path: str):
             except Exception as e:
                 print(f"⚠️ Could not initialize analysis repository: {e}")
                 return
+
+        video_repo = VideoRepository()
+        video_repo.update_video(video_id, {
+            'status': 'processing',
+            'updated_at': datetime.utcnow()
+        })
         
         # Analyze video with MCP server
         result = mcp_client.analyze_video(video_path)
@@ -50,6 +56,10 @@ def auto_analyze_video(video_id: str, video_path: str):
                 status='completed'
             )
             analysis_repo.create_analysis(analysis)
+            video_repo.update_video(video_id, {
+                'status': 'completed',
+                'updated_at': datetime.utcnow()
+            })
             print(f"✅ Auto-analysis completed with {len(steps)} steps")
         else:
             # Save failed analysis
@@ -60,11 +70,20 @@ def auto_analyze_video(video_id: str, video_path: str):
                 error=result['error']
             )
             analysis_repo.create_analysis(analysis)
+            video_repo.update_video(video_id, {
+                'status': 'error',
+                'updated_at': datetime.utcnow()
+            })
             print(f"❌ Auto-analysis failed: {result['error']}")
             
     except Exception as e:
         print(f"❌ Auto-analysis error: {str(e)}")
         try:
+            video_repo = VideoRepository()
+            video_repo.update_video(video_id, {
+                'status': 'error',
+                'updated_at': datetime.utcnow()
+            })
             if analysis_repo:
                 analysis = VideoAnalysis(
                     video_id=video_id,

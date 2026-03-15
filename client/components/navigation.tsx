@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, LogOut } from "lucide-react"
 import { toast } from "sonner"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,12 +51,12 @@ export function Navigation() {
   ]
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-transparent text-white">
+    <nav className="fixed top-0 left-0 z-50 w-full bg-transparent text-foreground">
       <div className="flex h-16 items-center justify-between px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="font-bold text-lg tracking-widest text-white"
+          className="font-bold text-lg tracking-widest text-foreground"
         >
           MIMICKER AI
         </Link>
@@ -71,13 +72,15 @@ export function Navigation() {
                 className={`text-sm font-mono tracking-wider transition-colors 
                   ${isActive
                     ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
-                    : "text-white hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                    : "text-foreground hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
                   }`}
               >
                 [ {item.label} ]
               </Link>
             )
           })}
+
+          <ThemeToggle className="border-border/60 bg-background/40 text-foreground hover:bg-accent/60 hover:text-yellow-400" />
 
           {isLoggedIn && (
             <div className="flex items-center gap-4 ml-6">
@@ -97,13 +100,13 @@ export function Navigation() {
         {/* Mobile Navigation */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="sm" className="text-white">
+            <Button variant="ghost" size="sm" className="text-foreground">
               <Menu className="size-5" />
             </Button>
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[280px] flex flex-col justify-between bg-black text-white"
+            className="w-[280px] flex flex-col justify-between bg-background text-foreground"
           >
             <div className="flex flex-col gap-6 mt-8">
               {navItems.map((item) => {
@@ -116,13 +119,15 @@ export function Navigation() {
                     className={`text-base font-mono tracking-wider transition-colors 
                       ${isActive
                         ? "text-yellow-400 drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
-                        : "text-white hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
+                        : "text-foreground hover:text-yellow-400 hover:drop-shadow-[0_0_6px_rgba(255,200,0,0.8)]"
                       }`}
                   >
                     [ {item.label} ]
                   </Link>
                 )
               })}
+
+              <ThemeToggle className="justify-start border-border/60 bg-background text-foreground hover:bg-accent/60 hover:text-yellow-400" />
             </div>
 
             {isLoggedIn && (

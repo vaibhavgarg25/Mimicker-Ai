@@ -21,7 +21,8 @@ export default function MimickerAI() {
   const [copied, setCopied] = useState(false);
 
   const handleGetStarted = () => {
-    const userLoggedIn = typeof window !== "undefined" && localStorage.getItem("token");
+    const userLoggedIn =
+      typeof window !== "undefined" && localStorage.getItem("token");
     if (userLoggedIn) {
       router.push("/dashboard");
     } else {
@@ -118,7 +119,7 @@ export default function MimickerAI() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
 
       {/* ================= HERO ================= */}
@@ -158,7 +159,7 @@ export default function MimickerAI() {
           <div className="flex gap-4 items-center">
             <button
               onClick={handleGetStarted}
-              className="px-6 md:px-8 py-3 rounded-full border border-foreground/40 text-sm md:text-base tracking-wide hover:scale-[1.02] transition-transform duration-200 backdrop-blur-sm bg-black/20"
+              className="px-6 md:px-8 py-3 rounded-full border border-foreground/40 text-sm md:text-base tracking-wide hover:scale-[1.02] transition-transform duration-200 backdrop-blur-sm bg-background/20"
             >
               SHOW TO AUTOMATE
             </button>
@@ -236,7 +237,8 @@ export default function MimickerAI() {
               size="lg"
               className="animate-pulse-glow hover:scale-105 transition-transform duration-200"
               onClick={() => {
-                const userLoggedIn = typeof window !== "undefined" && localStorage.getItem("token");
+                const userLoggedIn =
+                  typeof window !== "undefined" && localStorage.getItem("token");
                 if (userLoggedIn) {
                   router.push("/dashboard");
                 } else {

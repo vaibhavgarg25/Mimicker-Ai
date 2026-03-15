@@ -1,0 +1,180 @@
+{
+  "videos": [
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/b4b6ad5e81ef4b4da33f470bb615384b.mov",
+      "uploaded_at": "2026-03-15 05:18:43.034169",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://www.google.com",
+          "description": "Navigate to Google search"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for page to load"
+        },
+        {
+          "action": "type",
+          "selector": "textarea[name='q']",
+          "text": "YouTube automation demo",
+          "description": "Type search query in Google search box"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000,
+          "description": "Wait after typing"
+        },
+        {
+          "action": "click",
+          "selector": "input[name='btnK']",
+          "description": "Click Google Search button"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for search results to load"
+        },
+        {
+          "action": "click",
+          "selector": "h3 a",
+          "description": "Click on first search result"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for result page to load"
+        }
+      ],
+      "_id": "76b014e29ab644a782862eeae34f1208"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/147bba48b6f7438a8bab5c5f76367f7b.mov",
+      "uploaded_at": "2026-03-15 05:25:41.222508+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://www.youtube.com",
+          "description": "Navigate to YouTube"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for page load"
+        },
+        {
+          "action": "type",
+          "selector": "input[name='search_query']",
+          "text": "Me at the zoo",
+          "description": "Type in YouTube search"
+        },
+        {
+          "action": "click",
+          "selector": "button[id='search-icon-legacy']",
+          "description": "Click search button"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for search results"
+        },
+        {
+          "action": "click",
+          "selector": "a[href*='/watch?v=']",
+          "description": "Click on video"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for video to load"
+        },
+        {
+          "action": "click",
+          "selector": "button.ytp-play-button",
+          "description": "Pause the video"
+        },
+        {
+          "action": "click",
+          "selector": "button.ytp-play-button",
+          "description": "Play the video"
+        },
+        {
+          "action": "click",
+          "selector": "ytd-watch-metadata #segmented-like-button",
+          "description": "Like the video"
+        },
+        {
+          "action": "click",
+          "selector": "button:contains('Capture')",
+          "description": "Click 'Capture' button"
+        }
+      ],
+      "_id": "c71f332ba28f407b92942e011f693bae"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/4f96cdefd0b340a98ad074a3cbaf080f.mov",
+      "uploaded_at": "2026-03-15 05:31:09.776458+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://www.youtube.com",
+          "description": "Navigate to YouTube"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for page load"
+        },
+        {
+          "action": "click",
+          "selector": "input[name='search_query']",
+          "description": "Click on YouTube search bar"
+        },
+        {
+          "action": "type",
+          "selector": "input[name='search_query']",
+          "text": "Me at the zoo",
+          "description": "Type 'Me at the zoo' in search bar"
+        },
+        {
+          "action": "click",
+          "selector": "button[id='search-icon-legacy']",
+          "description": "Click search button"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for search results"
+        },
+        {
+          "action": "click",
+          "selector": "a[href*='/watch?v=']",
+          "description": "Click on 'Me at the zoo' video"
+        },
+        {
+          "action": "wait",
+          "timeout": 5000,
+          "description": "Wait for video to load and play"
+        },
+        {
+          "action": "click",
+          "selector": "div.html5-video-player",
+          "description": "Click video player to pause"
+        },
+        {
+          "action": "click",
+          "selector": "div.html5-video-player",
+          "description": "Click video player to play"
+        },
+        {
+          "action": "click",
+          "selector": "button[aria-label='Like this video']",
+          "description": "Click like button"
+        }
+      ],
+      "_id": "c9f0218eaa774c7cb7a38dfc147861b9"
+    }
+  ],
+  "executions": [],
+  "corrections": []
+}

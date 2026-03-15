@@ -12,8 +12,6 @@ import PrismaticBurst from "@/components/PrismaticBurst/PrismaticBurst";
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("signin");
   const router = useRouter();
-
-  // Base URL of your Flask backend
   const API_URL = "http://localhost:8000/api/auth";
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -29,21 +27,18 @@ export default function ProfilePage() {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Login failed");
+        throw new Error(data.message || "Login failed");
       }
 
-      const data = await res.json();
-      // Save token/user info
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userEmail", data.data.user.email);
       localStorage.setItem("userName", data.data.user.name);
       localStorage.setItem("token", data.data.token);
+      localStorage.setItem("joinDate", new Date().toLocaleDateString());
 
-      // inform other windows
       window.dispatchEvent(new Event("storage"));
-
       toast.success("Successfully signed in!");
       router.push("/dashboard");
     } catch (err: any) {
@@ -65,21 +60,18 @@ export default function ProfilePage() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Signup failed");
+        throw new Error(data.message || "Signup failed");
       }
 
-      const data = await res.json();
-
-      // Save token/user info
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userEmail", data.data.user.email);
       localStorage.setItem("userName", data.data.user.name);
       localStorage.setItem("token", data.data.token);
+      localStorage.setItem("joinDate", new Date().toLocaleDateString());
 
       window.dispatchEvent(new Event("storage"));
-
       toast.success("Account created successfully!");
       router.push("/dashboard");
     } catch (err: any) {

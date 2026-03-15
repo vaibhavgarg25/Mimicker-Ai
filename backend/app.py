@@ -15,7 +15,7 @@ def create_app():
     app = Flask(__name__)
     CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
     # Configuration
-    app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+    app.config['SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'mimicker-dev-secret-key')
     app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB max file size
     
     # Initialize database FIRST

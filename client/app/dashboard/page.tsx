@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Navigation } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { CodeBlock } from "@/components/ui/code-block";
 
 import { toast } from "sonner";
 import {
@@ -41,6 +43,8 @@ import {
   Trash2,
   Key,
   Check,
+  Download,
+  FileCode,
 } from "lucide-react";
 
 interface Credential {
@@ -53,6 +57,7 @@ interface Credential {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -72,6 +77,7 @@ export default function DashboardPage() {
   const [credentials, setCredentials] = useState<Credential[]>([]);
   const [isRunningScript, setIsRunningScript] = useState(false);
   const [isDragActive, setIsDragActive] = useState(false);
+  const [generatedScript, setGeneratedScript] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -95,6 +101,12 @@ export default function DashboardPage() {
   ];
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signup");
+      return;
+    }
+
     const userName = localStorage.getItem("userName");
     const joinDate =
       localStorage.getItem("joinDate") || new Date().toLocaleDateString();
@@ -103,16 +115,34 @@ export default function DashboardPage() {
       name: userName || "User",
       email: localStorage.getItem("userEmail") || "",
       joinDate,
-      scriptsGenerated: 5,
-      totalUploadTime: "1.5h",
-      successRate: "90%",
+      scriptsGenerated: 0,
+      totalUploadTime: "0 videos",
+      successRate: "0%",
     }));
-  }, []);
+  }, [router]);
+
+  useEffect(() => {
+    const completedVideos = uploadedVideos.filter(
+      (video) => video.status === "completed"
+    ).length;
+    const totalVideos = uploadedVideos.length;
+    const successRate =
+      totalVideos > 0 ? `${Math.round((completedVideos / totalVideos) * 100)}%` : "0%";
+
+    setUserData((prev) => ({
+      ...prev,
+      scriptsGenerated: completedVideos,
+      totalUploadTime: `${totalVideos} videos`,
+      successRate,
+    }));
+  }, [uploadedVideos]);
 
   useEffect(() => {
     const fetchVideos = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        return;
+      }
       try {
         const res = await fetch("http://localhost:8000/api/videos/my-videos", {
           headers: { Authorization: `Bearer ${token}` },
@@ -133,6 +163,7 @@ export default function DashboardPage() {
     if (file) {
       if (file.type.startsWith("video/")) {
         setSelectedFile(file);
+        setGeneratedScript("");
         toast.success(`Selected: ${file.name}`);
       } else {
         toast.error("Please select a video file");
@@ -229,34 +260,27 @@ export default function DashboardPage() {
   };
 
   const handleAnalyze = async () => {
+    setGeneratedScript("");
     const token = localStorage.getItem("token");
     const videoId = localStorage.getItem("lastVideoId");
-    if (!token || !videoId) {
-      toast.error("Missing token or video ID");
+    if (!videoId) {
+      toast.error("Missing video ID");
+      return;
+    }
+
+    if (!token) {
+      toast.error("You must be signed in");
       return;
     }
 
     setIsAnalyzing(true);
     try {
-      // Show message about browser automation
-      toast.success("🎬 Starting analysis and browser automation demo!");
-      
-      const triggerRes = await fetch(
-        `http://localhost:8000/api/automation/trigger/${videoId}`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (!triggerRes.ok) throw new Error("Failed to trigger extraction");
-      
-      // Show browser automation message
-      setTimeout(() => {
-        toast.success("🚀 Browser window should open for automation demo!");
-      }, 2000);
+      toast.success("Checking analysis status...");
 
-      let status = "processing";
-      while (status === "processing" || status === "queued") {
+      let status = "not_started";
+      let retries = 0;
+
+      while (status === "not_started" || status === "processing" || status === "queued") {
         await new Promise((resolve) => setTimeout(resolve, 3000));
         const statusRes = await fetch(
           `http://localhost:8000/api/automation/status/${videoId}`,
@@ -264,8 +288,16 @@ export default function DashboardPage() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        if (!statusRes.ok) {
+          throw new Error("Failed to fetch analysis status");
+        }
         const statusData = await statusRes.json();
         status = statusData.data?.analysis_status || "failed";
+        retries += 1;
+
+        if (status === "not_started" && retries >= 10) {
+          throw new Error("Analysis has not started yet. Make sure the MCP server is running.");
+        }
       }
 
       if (status !== "completed") throw new Error("Analysis failed");
@@ -281,6 +313,10 @@ export default function DashboardPage() {
       // Extract the analysis data properly
       const analysisData = resultsData.data?.analysis || resultsData.data;
       const steps = analysisData?.steps || [];
+
+      if (!steps.length) {
+        throw new Error("Analysis completed but no automation steps were extracted");
+      }
 
       setAnalysisResult({
         detectedActions: steps.map(
@@ -334,15 +370,11 @@ export default function DashboardPage() {
   const handleRunScript = async () => {
     setIsRunningScript(true);
     setTimeout(() => {
+      const script = buildAutomationScript();
+      setGeneratedScript(script);
       setIsRunningScript(false);
       toast.success("Automation script generated successfully!");
-      setTimeout(() => {
-        setCurrentStep(1);
-        setSelectedFile(null);
-        setAnalysisResult(null);
-        setCredentials([]);
-        setUploadProgress(0);
-      }, 1500);
+      setCurrentStep(4);
     }, 2000);
   };
 
@@ -383,7 +415,56 @@ export default function DashboardPage() {
     parseInt(userData.successRate.replace("%", ""), 10) || 0;
 
   const cardBase =
-    "rounded-2xl p-4 sm:p-6 bg-gradient-to-br from-black/60 to-black/50 border border-white/6 shadow-sm transition hover:shadow-lg";
+    "rounded-2xl p-4 sm:p-6 border border-border bg-card/95 shadow-sm transition hover:shadow-lg dark:bg-gradient-to-br dark:from-black/60 dark:to-black/50 dark:border-white/6";
+
+  const buildAutomationScript = () => {
+    const baseName = selectedFile?.name?.replace(/\.[^/.]+$/, "") || "automation-script";
+    const normalizedSteps = (analysisResult?.steps || []).map(
+      (step: any, index: number) => ({
+        id: index + 1,
+        action: step.action || step.type || "wait",
+        selector: step.selector || undefined,
+        url: step.url || undefined,
+        text: step.text || undefined,
+        timeout: step.timeout || undefined,
+        description: step.description || `Step ${index + 1}`,
+      })
+    );
+
+    return JSON.stringify(
+      {
+        name: `${baseName}-automation`,
+        version: "1.0.0",
+        metadata: {
+          created: new Date().toISOString(),
+          sourceVideo: selectedFile?.name || "demo-video",
+          generatedBy: "Mimicker AI Dashboard",
+          credentialCount: credentials.length,
+        },
+        steps: normalizedSteps,
+      },
+      null,
+      2
+    );
+  };
+
+  const downloadGeneratedScript = () => {
+    if (!generatedScript) {
+      toast.error("Generate a script first");
+      return;
+    }
+
+    const blob = new Blob([generatedScript], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${selectedFile?.name?.replace(/\.[^/.]+$/, "") || "automation-script"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success("Script downloaded");
+  };
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -412,7 +493,7 @@ export default function DashboardPage() {
                 className={`rounded-lg border-2 p-4 sm:p-6 text-center cursor-pointer transition-all duration-200 ${
                   isDragActive
                     ? "border-primary/60 bg-primary/5 scale-[1.02]"
-                    : "border-dashed border-white/10 bg-transparent hover:border-white/20 hover:bg-white/2"
+                    : "border-dashed border-border/70 bg-transparent hover:border-primary/30 hover:bg-accent/20 dark:border-white/10 dark:hover:border-white/20 dark:hover:bg-white/2"
                 }`}
                 onDragOver={handleDragOver}
                 onDragEnter={handleDragEnter}
@@ -591,7 +672,7 @@ export default function DashboardPage() {
                   {credentials.map((credential) => (
                     <div
                       key={credential.id}
-                      className="p-4 rounded-lg border border-white/10 bg-white/2 space-y-3"
+                      className="space-y-3 rounded-lg border border-border/70 bg-background/60 p-4 dark:border-white/10 dark:bg-white/2"
                     >
                       <div className="flex items-center justify-between">
                         <Input
@@ -604,7 +685,7 @@ export default function DashboardPage() {
                               e.target.value
                             )
                           }
-                          className="bg-transparent border-white/10 text-sm"
+                          className="border-border/70 bg-background/70 text-sm dark:border-white/10 dark:bg-transparent"
                         />
                         <Button
                           variant="ghost"
@@ -635,7 +716,7 @@ export default function DashboardPage() {
                                 e.target.value
                               )
                             }
-                            className="bg-transparent border-white/10 text-sm mt-1"
+                            className="mt-1 border-border/70 bg-background/70 text-sm dark:border-white/10 dark:bg-transparent"
                           />
                         </div>
                         <div>
@@ -657,7 +738,7 @@ export default function DashboardPage() {
                                 e.target.value
                               )
                             }
-                            className="bg-transparent border-white/10 text-sm mt-1"
+                            className="mt-1 border-border/70 bg-background/70 text-sm dark:border-white/10 dark:bg-transparent"
                           />
                         </div>
                       </div>
@@ -680,7 +761,7 @@ export default function DashboardPage() {
                               e.target.value
                             )
                           }
-                          className="bg-transparent border-white/10 text-sm mt-1"
+                          className="mt-1 border-border/70 bg-background/70 text-sm dark:border-white/10 dark:bg-transparent"
                         />
                       </div>
 
@@ -702,7 +783,7 @@ export default function DashboardPage() {
                               e.target.value
                             )
                           }
-                          className="bg-transparent border-white/10 text-sm mt-1 min-h-[60px]"
+                          className="mt-1 min-h-[60px] border-border/70 bg-background/70 text-sm dark:border-white/10 dark:bg-transparent"
                         />
                       </div>
                     </div>
@@ -723,10 +804,13 @@ export default function DashboardPage() {
                   Generate Script
                 </CardTitle>
               </div>
+              <CardDescription className="text-xs sm:text-sm">
+                Preview the generated automation JSON and download it directly.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                <div className="rounded-lg border border-border/70 bg-background/70 p-4 dark:border-white/10 dark:bg-white/5">
                   <h4 className="font-medium mb-2">
                     Ready to generate automation script
                   </h4>
@@ -749,20 +833,45 @@ export default function DashboardPage() {
                   disabled={isRunningScript}
                   className="w-full"
                 >
-                  {isRunningScript
-                    ? "Generating Script..."
-                    : "Generate & Run Script"}
+                  {isRunningScript ? "Generating Script..." : "Generate Script"}
                 </Button>
 
-                <div className="text-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toast("Script history coming soon")}
-                  >
-                    View History
-                  </Button>
-                </div>
+                {generatedScript ? (
+                  <div className="space-y-4">
+                    <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4">
+                      <div className="mb-3 flex items-center gap-2">
+                        <FileCode className="size-4 text-primary" />
+                        <div className="text-sm font-medium">
+                          automation-script.json
+                        </div>
+                      </div>
+                      <CodeBlock
+                        code={generatedScript}
+                        language="json"
+                        filename="automation-script.json"
+                      />
+                    </div>
+
+                    <Button
+                      onClick={downloadGeneratedScript}
+                      className="w-full gap-2"
+                      variant="secondary"
+                    >
+                      <Download className="size-4" />
+                      Download Script
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toast("Generate the script to preview it here")}
+                    >
+                      Preview appears after generation
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -826,7 +935,7 @@ export default function DashboardPage() {
                           ? "bg-primary border-primary text-white"
                           : step.number < currentStep
                           ? "bg-primary/20 border-primary text-primary"
-                          : "bg-transparent border-white/20 text-muted-foreground"
+                          : "bg-background/80 border-border text-muted-foreground dark:bg-transparent dark:border-white/20"
                       }`}
                     >
                       {step.number < currentStep ? (
@@ -846,7 +955,7 @@ export default function DashboardPage() {
                   {index < steps.length - 1 && (
                     <div
                       className={`w-8 sm:w-16 h-0.5 mx-2 sm:mx-4 transition-all ${
-                        step.number < currentStep ? "bg-primary" : "bg-white/10"
+                        step.number < currentStep ? "bg-primary" : "bg-border dark:bg-white/10"
                       }`}
                     />
                   )}
@@ -915,7 +1024,7 @@ export default function DashboardPage() {
                       {uploadedVideos.slice(0, 3).map((video, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between gap-2 sm:gap-4 p-2 sm:p-3 rounded-lg bg-white/3"
+                          className="flex items-center justify-between gap-2 rounded-lg bg-muted/40 p-2 sm:gap-4 sm:p-3 dark:bg-white/3"
                         >
                           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                             {video.thumbnail ? (
@@ -925,7 +1034,7 @@ export default function DashboardPage() {
                                 className="w-10 h-7 sm:w-14 sm:h-10 object-cover rounded-md flex-shrink-0"
                               />
                             ) : (
-                              <div className="w-10 h-7 sm:w-14 sm:h-10 rounded-md bg-white/5 flex items-center justify-center flex-shrink-0">
+                              <div className="flex h-7 w-10 flex-shrink-0 items-center justify-center rounded-md bg-muted/60 sm:h-10 sm:w-14 dark:bg-white/5">
                                 <FileVideo className="w-3 h-3 sm:w-4 sm:h-4" />
                               </div>
                             )}
@@ -1026,12 +1135,13 @@ export default function DashboardPage() {
 
                     <div className="text-center flex-shrink-0">
                       <div className="w-16 h-16 sm:w-20 sm:h-20">
-                        <svg className="w-full h-full" viewBox="0 0 80 80">
+                        <svg className="h-full w-full text-foreground" viewBox="0 0 80 80">
                           <circle
                             cx="40"
                             cy="40"
                             r="30"
-                            stroke="rgba(255,255,255,0.06)"
+                            stroke="currentColor"
+                            opacity="0.12"
                             strokeWidth="8"
                             fill="none"
                           />
@@ -1057,10 +1167,10 @@ export default function DashboardPage() {
                             x="40"
                             y="45"
                             textAnchor="middle"
-                            fill="#fff"
+                            fill="currentColor"
                             fontSize="12"
                             fontWeight="600"
-                            className="sm:text-sm"
+                            className="text-foreground sm:text-sm"
                           >
                             {userData.successRate}
                           </text>
