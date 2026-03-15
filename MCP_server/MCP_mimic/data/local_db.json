@@ -173,6 +173,148 @@
         }
       ],
       "_id": "c9f0218eaa774c7cb7a38dfc147861b9"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/9e6da42d92d74208bef3130648f2115e.mov",
+      "uploaded_at": "2026-03-15 05:37:47.481494+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://www.youtube.com",
+          "description": "Navigate to YouTube"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for page load"
+        },
+        {
+          "action": "type",
+          "selector": "input[name='search_query']",
+          "text": "Me at the zoo",
+          "description": "Type in YouTube search"
+        },
+        {
+          "action": "click",
+          "selector": "button[id='search-icon-legacy']",
+          "description": "Click search button"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for search results"
+        },
+        {
+          "action": "click",
+          "selector": "a[href*='/watch?v=']",
+          "description": "Click on video"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for video to load"
+        },
+        {
+          "action": "click",
+          "selector": "button.ytp-play-button",
+          "description": "Pause the video"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000,
+          "description": "Wait for pause action"
+        },
+        {
+          "action": "click",
+          "selector": "button[aria-label^='Like this video']",
+          "description": "Click the like button"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000,
+          "description": "Wait for like action"
+        },
+        {
+          "action": "click",
+          "selector": "button:has-text('Download')",
+          "description": "Click the download button"
+        }
+      ],
+      "_id": "74dd4e69d53b404ea74982edccb5c04d"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/0fc3f188b4754fda866af339bdb02736.mp4",
+      "uploaded_at": "2026-03-15 05:38:14.961631+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://in.search.yahoo.com/search?fr=mcafee&type=E211IN1590G91424&p=yt&guccounter=1",
+          "description": "Navigate to Yahoo search results for 'yt'"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for Yahoo search results page to load"
+        },
+        {
+          "action": "click",
+          "selector": "a[href='https://www.youtube.com']",
+          "description": "Click on the 'www.youtube.com' link in the search results"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for YouTube homepage to load"
+        },
+        {
+          "action": "click",
+          "selector": "a[href='/watch?v=hsrIOSAOC1s']",
+          "description": "Click on the 'I Survived 1000 Days in Minecraft Hardcore [FULL MOVIE]' video"
+        },
+        {
+          "action": "wait",
+          "timeout": 5000,
+          "description": "Wait for the video to load and start playing"
+        }
+      ],
+      "_id": "1d754080f67d4d6e92877c929d98c253"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/51140e5f254f42debf2bf727a48e0e5a.mp4",
+      "uploaded_at": "2026-03-15 05:38:29.616812+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://in.search.yahoo.com/search?fr=mcafee&type=E211IN1590G91424&p=yt",
+          "description": "Navigate to Yahoo search results for 'yt'"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for Yahoo search results page to load"
+        },
+        {
+          "action": "click",
+          "selector": "a[href='https://www.youtube.com']",
+          "description": "Click on the YouTube link from search results"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for YouTube homepage to load"
+        },
+        {
+          "action": "click",
+          "selector": "a[href='https://www.youtube.com/watch?v=hsfIOSA0C1pl']",
+          "description": "Click on 'I Survived 1000 Days in Minecraft Hardcore [FULL MOVIE]' video"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for the video to load"
+        }
+      ],
+      "_id": "88a4ae8fd4844a439f8a66cc4464b314"
     }
   ],
   "executions": [],

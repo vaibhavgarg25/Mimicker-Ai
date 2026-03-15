@@ -63,6 +63,54 @@
         "__type__": "datetime",
         "value": "2026-03-15T05:31:09.778410"
       }
+    },
+    {
+      "filename": "9e6da42d92d74208bef3130648f2115e.mov",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "Screen Recording 2026-03-15 at 10.15.02.mov",
+      "file_size": 96618705,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:36:58.781214"
+      },
+      "status": "completed",
+      "_id": "f72e5da6bce34dc58287f8e5f8b45164",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:37:47.485542"
+      }
+    },
+    {
+      "filename": "0fc3f188b4754fda866af339bdb02736.mp4",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "test_1.mp4",
+      "file_size": 22827081,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:37:45.915310"
+      },
+      "status": "completed",
+      "_id": "9ebba038f01d4f71873ca2f56e9a7195",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:14.966641"
+      }
+    },
+    {
+      "filename": "51140e5f254f42debf2bf727a48e0e5a.mp4",
+      "user_id": "0aa526dc3e224b55a0750fee4b30661d",
+      "original_name": "test_1.mp4",
+      "file_size": 22827081,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:01.546627"
+      },
+      "status": "completed",
+      "_id": "75cf74c7a45349169f1730cd274d8be1",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:29.621297"
+      }
     }
   ],
   "video_analyses": [
@@ -167,6 +215,175 @@
         "value": "2026-03-15T05:31:09.777951"
       },
       "_id": "2fe485ab77f443f197174a2972fa3d1b"
+    },
+    {
+      "video_id": "f72e5da6bce34dc58287f8e5f8b45164",
+      "steps": [
+        {
+          "action": "goto",
+          "description": "Navigate to YouTube",
+          "url": "https://www.youtube.com"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for page load",
+          "timeout": 2000
+        },
+        {
+          "action": "type",
+          "description": "Type in YouTube search",
+          "selector": "input[name='search_query']",
+          "text": "Me at the zoo"
+        },
+        {
+          "action": "click",
+          "description": "Click search button",
+          "selector": "button[id='search-icon-legacy']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for search results",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Click on video",
+          "selector": "a[href*='/watch?v=']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for video to load",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Pause the video",
+          "selector": "button.ytp-play-button"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for pause action",
+          "timeout": 1000
+        },
+        {
+          "action": "click",
+          "description": "Click the like button",
+          "selector": "button[aria-label^='Like this video']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for like action",
+          "timeout": 1000
+        },
+        {
+          "action": "click",
+          "description": "Click the download button",
+          "selector": "button:has-text('Download')"
+        }
+      ],
+      "status": "completed",
+      "error": null,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:37:47.484192"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:37:47.484198"
+      },
+      "_id": "3f5f5e72e90648b7b3b18dda9b7ed0cf"
+    },
+    {
+      "video_id": "9ebba038f01d4f71873ca2f56e9a7195",
+      "steps": [
+        {
+          "action": "goto",
+          "description": "Navigate to Yahoo search results for 'yt'",
+          "url": "https://in.search.yahoo.com/search?fr=mcafee&type=E211IN1590G91424&p=yt&guccounter=1"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for Yahoo search results page to load",
+          "timeout": 2000
+        },
+        {
+          "action": "click",
+          "description": "Click on the 'www.youtube.com' link in the search results",
+          "selector": "a[href='https://www.youtube.com']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for YouTube homepage to load",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Click on the 'I Survived 1000 Days in Minecraft Hardcore [FULL MOVIE]' video",
+          "selector": "a[href='/watch?v=hsrIOSAOC1s']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for the video to load and start playing",
+          "timeout": 5000
+        }
+      ],
+      "status": "completed",
+      "error": null,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:14.965260"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:14.965266"
+      },
+      "_id": "d10a7df237f14a6a9729cbdca859e604"
+    },
+    {
+      "video_id": "75cf74c7a45349169f1730cd274d8be1",
+      "steps": [
+        {
+          "action": "goto",
+          "description": "Navigate to Yahoo search results for 'yt'",
+          "url": "https://in.search.yahoo.com/search?fr=mcafee&type=E211IN1590G91424&p=yt"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for Yahoo search results page to load",
+          "timeout": 2000
+        },
+        {
+          "action": "click",
+          "description": "Click on the YouTube link from search results",
+          "selector": "a[href='https://www.youtube.com']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for YouTube homepage to load",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Click on 'I Survived 1000 Days in Minecraft Hardcore [FULL MOVIE]' video",
+          "selector": "a[href='https://www.youtube.com/watch?v=hsfIOSA0C1pl']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for the video to load",
+          "timeout": 3000
+        }
+      ],
+      "status": "completed",
+      "error": null,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:29.619892"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-03-15T05:38:29.619898"
+      },
+      "_id": "6de9e02a5629409bb17839fdcf5ad3db"
     }
   ],
   "automation_executions": []
