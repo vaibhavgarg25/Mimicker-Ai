@@ -315,6 +315,54 @@
         }
       ],
       "_id": "88a4ae8fd4844a439f8a66cc4464b314"
+    },
+    {
+      "video_url": "/Users/mervinmandanna/Documents/Web Development/Mimicker-Ai/backend/uploads/dbdf17cb234e4f378a83f77b627ff009.mov",
+      "uploaded_at": "2026-04-06 16:57:27.967153+00:00",
+      "steps": [
+        {
+          "action": "goto",
+          "url": "https://www.google.com",
+          "description": "Navigate to Google search"
+        },
+        {
+          "action": "wait",
+          "timeout": 2000,
+          "description": "Wait for page to load"
+        },
+        {
+          "action": "type",
+          "selector": "textarea[name='q']",
+          "text": "YouTube automation demo",
+          "description": "Type search query in Google search box"
+        },
+        {
+          "action": "wait",
+          "timeout": 1000,
+          "description": "Wait after typing"
+        },
+        {
+          "action": "click",
+          "selector": "input[name='btnK']",
+          "description": "Click Google Search button"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for search results to load"
+        },
+        {
+          "action": "click",
+          "selector": "h3 a",
+          "description": "Click on first search result"
+        },
+        {
+          "action": "wait",
+          "timeout": 3000,
+          "description": "Wait for result page to load"
+        }
+      ],
+      "_id": "80e66c490eb940c3b7e75f50795b62bd"
     }
   ],
   "executions": [],

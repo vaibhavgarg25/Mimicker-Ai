@@ -81,6 +81,16 @@ export default function DashboardPage() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleUnauthorized = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("lastVideoId");
+    toast.error("Your session expired. Please sign in again.");
+    router.push("/signup");
+  };
+
   const steps = [
     {
       number: 1,
@@ -147,6 +157,10 @@ export default function DashboardPage() {
         const res = await fetch("http://localhost:8000/api/videos/my-videos", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
         if (!res.ok) throw new Error("Failed to fetch videos");
         const data = await res.json();
         setUploadedVideos(data.data.videos || []);
@@ -156,7 +170,7 @@ export default function DashboardPage() {
       }
     };
     fetchVideos();
-  }, []);
+  }, [router]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -238,6 +252,12 @@ export default function DashboardPage() {
         body: formData,
       });
 
+      if (res.status === 401) {
+        handleUnauthorized();
+        setIsUploading(false);
+        setUploadProgress(0);
+        return;
+      }
       if (!res.ok) throw new Error("Upload failed");
       const data = await res.json();
       const uploadedVideo = data.data;
@@ -288,6 +308,10 @@ export default function DashboardPage() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        if (statusRes.status === 401) {
+          handleUnauthorized();
+          return;
+        }
         if (!statusRes.ok) {
           throw new Error("Failed to fetch analysis status");
         }
@@ -308,6 +332,10 @@ export default function DashboardPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (resultsRes.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       const resultsData = await resultsRes.json();
 
       // Extract the analysis data properly

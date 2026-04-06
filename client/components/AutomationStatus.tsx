@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,9 +35,21 @@ interface StatusData {
 }
 
 export default function AutomationStatus({ videoId, onExecute }: AutomationStatusProps) {
+  const router = useRouter();
   const [status, setStatus] = useState<StatusData | null>(null);
   const [loading, setLoading] = useState(true);
   const [executing, setExecuting] = useState(false);
+
+  const handleUnauthorized = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("lastVideoId");
+    toast.error("Your session expired. Please sign in again.");
+    router.push("/signup");
+  };
+
   const fetchStatus = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -44,6 +57,10 @@ export default function AutomationStatus({ videoId, onExecute }: AutomationStatu
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      if (response.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       if (response.ok) {
         const data = await response.json();
         setStatus(data.data);
@@ -69,6 +86,10 @@ export default function AutomationStatus({ videoId, onExecute }: AutomationStatu
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      if (response.status === 401) {
+        handleUnauthorized();
+        return;
+      }
       if (response.ok) {
         toast.success("Automation started!");
         onExecute?.();

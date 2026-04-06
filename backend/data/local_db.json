@@ -13,6 +13,20 @@
         "value": "2026-03-15T05:17:18.267832"
       },
       "_id": "0aa526dc3e224b55a0750fee4b30661d"
+    },
+    {
+      "name": "Mervin",
+      "email": "mervin@test.com",
+      "password_hash": "$2b$12$p7o87MwivVg4xUPjVUIZfuXTPuSswjJQGnKg3GIMu3sXWw8rnE5/i",
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:42:54.192678"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:42:54.192682"
+      },
+      "_id": "51738a8532594fe9a4c25bc4eae77171"
     }
   ],
   "videos": [
@@ -110,6 +124,38 @@
       "updated_at": {
         "__type__": "datetime",
         "value": "2026-03-15T05:38:29.621297"
+      }
+    },
+    {
+      "filename": "fb89b710c42445a69f32da598167870a.mov",
+      "user_id": "51738a8532594fe9a4c25bc4eae77171",
+      "original_name": "Screen Recording 2026-04-06 at 14.55.49.mov",
+      "file_size": 57229743,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:43:04.368028"
+      },
+      "status": "error",
+      "_id": "1a19af56f6f94ae09b3beeed73d88bb4",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:44:28.599751"
+      }
+    },
+    {
+      "filename": "dbdf17cb234e4f378a83f77b627ff009.mov",
+      "user_id": "51738a8532594fe9a4c25bc4eae77171",
+      "original_name": "Screen Recording 2026-04-06 at 14.55.49.mov",
+      "file_size": 57229743,
+      "upload_timestamp": {
+        "__type__": "datetime",
+        "value": "2026-04-06T16:57:26.529907"
+      },
+      "status": "completed",
+      "_id": "f9dd06daa9ed400dac1af01cede123cc",
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T16:57:27.971431"
       }
     }
   ],
@@ -384,6 +430,78 @@
         "value": "2026-03-15T05:38:29.619898"
       },
       "_id": "6de9e02a5629409bb17839fdcf5ad3db"
+    },
+    {
+      "video_id": "1a19af56f6f94ae09b3beeed73d88bb4",
+      "steps": [],
+      "status": "failed",
+      "error": "Failed to connect to MCP server: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:44:28.598463"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T09:44:28.598467"
+      },
+      "_id": "f572137f33814d57bc85edf756d0909d"
+    },
+    {
+      "video_id": "f9dd06daa9ed400dac1af01cede123cc",
+      "steps": [
+        {
+          "action": "goto",
+          "description": "Navigate to Google search",
+          "url": "https://www.google.com"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for page to load",
+          "timeout": 2000
+        },
+        {
+          "action": "type",
+          "description": "Type search query in Google search box",
+          "selector": "textarea[name='q']",
+          "text": "YouTube automation demo"
+        },
+        {
+          "action": "wait",
+          "description": "Wait after typing",
+          "timeout": 1000
+        },
+        {
+          "action": "click",
+          "description": "Click Google Search button",
+          "selector": "input[name='btnK']"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for search results to load",
+          "timeout": 3000
+        },
+        {
+          "action": "click",
+          "description": "Click on first search result",
+          "selector": "h3 a"
+        },
+        {
+          "action": "wait",
+          "description": "Wait for result page to load",
+          "timeout": 3000
+        }
+      ],
+      "status": "completed",
+      "error": null,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T16:57:27.970581"
+      },
+      "updated_at": {
+        "__type__": "datetime",
+        "value": "2026-04-06T16:57:27.970584"
+      },
+      "_id": "95a28720d1a847f2b39938f6b0962536"
     }
   ],
   "automation_executions": []
